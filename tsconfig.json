@@ -18,7 +18,7 @@
     "jsx": "react-jsx",
     "paths": {
       "~/*": ["src/*"],
-      "@hyperliquid-sdk/*": ["packages/sdk/src"]
+      "hyperliquid-sdk": ["packages/sdk/src"]
     }
   },
   "include": ["src", "packages", "playground"]

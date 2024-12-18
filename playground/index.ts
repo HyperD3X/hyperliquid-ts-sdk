@@ -1,5 +1,5 @@
 import { testInfoAPI } from './tests';
-import { Hyperliquid } from '@hyperliquid-sdk/sdk';
+import { Hyperliquid } from 'hyperliquid-sdk';
 
 async function main() {
   const sdk = new Hyperliquid('');
