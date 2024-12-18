@@ -6,8 +6,8 @@
   "main": "index.js",
   "scripts": {
     "playground": "node --import tsx ./playground/index.ts",
-    "sdk:build": "npm run build --workspace=@hyperliquid-sdk/sdk --if-present",
-    "sdk:publish": "npm publish --workspace=@hyperliquid-sdk/sdk --access public"
+    "sdk:build": "npm run build --workspace=hyperliquid-sdk --if-present",
+    "sdk:publish": "npm publish --workspace=hyperliquid-sdk --access public"
   },
   "workspaces": [
     "packages/*"
@@ -16,7 +16,9 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "node-polyfill-webpack-plugin": "^4.1.0",
     "prettier": "^3.4.2",
+    "ts-loader": "^9.5.1",
     "tsx": "^4.19.2"
   }
 }
