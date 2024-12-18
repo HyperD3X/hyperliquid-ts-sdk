@@ -1,5 +1,5 @@
 {
-  "name": "@hyperliquid-sdk/ts",
+  "name": "@hyperliquid-sdk/sdk",
   "version": "1.0.1",
   "description": "",
   "main": "index.js",

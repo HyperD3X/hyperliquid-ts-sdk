@@ -6,8 +6,8 @@
   "main": "index.js",
   "scripts": {
     "playground": "node --import tsx ./playground/index.ts",
-    "sdk:build": "npm run build --workspace=@hyperliquid-sdk/ts --if-present",
-    "sdk:publish": "npm publish --workspace=@hyperliquid-sdk/ts --access public"
+    "sdk:build": "npm run build --workspace=@hyperliquid-sdk/sdk --if-present",
+    "sdk:publish": "npm publish --workspace=@hyperliquid-sdk/sdk --access public"
   },
   "workspaces": [
     "packages/*"
