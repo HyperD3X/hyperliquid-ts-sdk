@@ -1,0 +1,21 @@
+{
+  "name": "hyperliquid-ts-sdk",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "playground": "node --import tsx ./playground/index.ts"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@craco/craco": "^7.1.0",
+    "prettier": "^3.4.2",
+    "tsx": "^4.19.2"
+  }
+}

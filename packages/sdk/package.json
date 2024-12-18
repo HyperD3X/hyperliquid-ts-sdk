@@ -1,0 +1,23 @@
+{
+  "name": "sdk",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@msgpack/msgpack": "^3.0.0-beta2",
+    "@types/ws": "^8.5.13",
+    "axios": "^1.7.9",
+    "ethers": "^6.13.4",
+    "typescript": "^5.7.2",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2"
+  }
+}
