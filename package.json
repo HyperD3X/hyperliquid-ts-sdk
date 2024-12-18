@@ -5,7 +5,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "playground": "node --import tsx ./playground/index.ts"
+    "playground": "node --import tsx ./playground/index.ts",
+    "sdk:build": "npm run build --workspace=@hyperliquid-sdk/ts --if-present",
+    "sdk:publish": "npm publish --workspace=@hyperliquid-sdk/ts --access public"
   },
   "workspaces": [
     "packages/*"
@@ -14,7 +16,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@craco/craco": "^7.1.0",
     "prettier": "^3.4.2",
     "tsx": "^4.19.2"
   }
