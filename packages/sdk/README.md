@@ -1,8 +1,13 @@
-# Typescript SDK wrapper for the Hyperliquid DEX with the working examples
+# Typescript SDK for the Hyperliquid DEX with the working examples
 
-### How to run:
+### How to use:
 ```
-nvm exec npm i
-nvm exec npm run playground
-```
+import { Hyperliquid } from '@hyperliquid-sdk/sdk';
 
+const rawMode = true;
+const privateKey = <YOUR_PRIVATE_KEY>; 
+
+const sdk = new Hyperliquid(privateKey);
+
+await sdk.info.getAllMids(rawMode)
+```
