@@ -2,7 +2,9 @@ import { testInfoAPI, testPerpetualsInfoAPI, testSpotInfoAPI } from './tests';
 import { Hyperliquid } from 'hyperliquid-sdk';
 
 async function main() {
-  const sdk = new Hyperliquid('');
+  const walletPrivateKey = '';
+
+  const sdk = new Hyperliquid(walletPrivateKey);
   await testInfoAPI(sdk);
 
   await testSpotInfoAPI(sdk);
