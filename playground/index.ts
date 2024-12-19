@@ -1,4 +1,4 @@
-import {testInfoAPI, testPerpetualsInfoAPI, testSpotInfoAPI} from './tests';
+import { testInfoAPI, testPerpetualsInfoAPI, testSpotInfoAPI } from './tests';
 import { Hyperliquid } from 'hyperliquid-sdk';
 
 async function main() {
