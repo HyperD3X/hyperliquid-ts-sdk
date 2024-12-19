@@ -10,3 +10,5 @@ const sdk = new Hyperliquid(privateKey);
 
 await sdk.info.getAllMids()
 ```
+
+Run playground to see more tests
