@@ -6,4 +6,4 @@ nvm exec npm i
 nvm exec npm run playground
 ```
 
-[SDK documentation]("./packages/sdk/README.md")
+[SDK documentation](./packages/sdk/README.md)
