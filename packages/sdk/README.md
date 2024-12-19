@@ -2,7 +2,7 @@
 
 ### How to use:
 ```
-import { Hyperliquid } from '@hyperliquid-sdk/sdk';
+import { Hyperliquid } from 'hyperliquid-sdk';
 
 const rawMode = true;
 const privateKey = <YOUR_PRIVATE_KEY>; 
