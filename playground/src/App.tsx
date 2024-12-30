@@ -1,5 +1,6 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import {
+  AllMids,
   ClearinghouseState,
   Hyperliquid,
   SpotClearinghouseState,
@@ -8,10 +9,11 @@ import { ethers } from 'ethers';
 
 let sdk = new Hyperliquid('');
 
+type PriceView = { coin: string; price: string };
+
 function App() {
   const mounted = useRef(false);
-  const [spot, setSpot] = useState<string[]>([]);
-  const [perps, setPerps] = useState<string[]>([]);
+  const [prices, setPrices] = useState<PriceView[]>([]);
   const [privateKey, setPrivateKey] = useState<string>('');
   const [publicKey, setPublicKey] = useState<string>();
   const [spotBalances, setSpotBalances] = useState<SpotClearinghouseState>();
@@ -42,14 +44,32 @@ function App() {
   }, [privateKey]);
 
   useEffect(() => {
+    if (!publicKey) {
+      return;
+    }
     updatePositionsInfo();
   }, [publicKey]);
 
-  const load = async () => {
-    const assets = await sdk.info.getAllAssets();
+  const startWebsocket = async () => {
+    await sdk.connect();
+    await sdk.subscriptions.subscribeToAllMids((allMids) => {
+      setPrices(formatToPrices(allMids));
+    });
+    await sdk.subscriptions.subscribeToWebData2(publicKey!, (data) => {
+      setPerpBalances(data.clearinghouseState);
+      setSpotBalances(data.spotState);
+    });
+  };
 
-    setSpot(assets.spot);
-    setPerps(assets.perp);
+  const formatToPrices = (allMids: AllMids): PriceView[] => {
+    return Object.keys(allMids)
+      .filter((coin) => !coin.startsWith('@'))
+      .map((coin) => ({ coin, price: allMids[coin] }));
+  };
+
+  const load = async () => {
+    const allMids = await sdk.info.getAllMids();
+    setPrices(formatToPrices(allMids));
   };
 
   const onPrivateKeyChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -66,7 +86,7 @@ function App() {
     const apiResponse = await sdk.exchange.placeOrder({
       coin: 'HYPE-SPOT',
       is_buy: true,
-      sz: 1,
+      sz: 0.01,
       limit_px: 29,
       order_type: { limit: { tif: 'Ioc' } },
       reduce_only: false,
@@ -76,7 +96,26 @@ function App() {
       setError(JSON.stringify(apiResponse.response.data.statuses));
     }
   };
-  const buyPerp = () => {};
+  const buyPerp = async () => {
+    resetError();
+
+    const coin = 'HYPE-PERP';
+
+    await sdk.exchange.updateLeverage(coin, 'isolated', 3);
+
+    const apiResponse = await sdk.exchange.placeOrder({
+      coin,
+      is_buy: true,
+      sz: 4,
+      limit_px: 29,
+      order_type: { limit: { tif: 'Ioc' } },
+      reduce_only: false,
+    });
+
+    if (apiResponse.response.data.statuses.find((status) => !!status.error)) {
+      setError(JSON.stringify(apiResponse.response.data.statuses));
+    }
+  };
 
   const updatePositionsInfo = async () => {
     setSpotBalances(await sdk.info.spot.getSpotClearinghouseState(publicKey!));
@@ -89,26 +128,44 @@ function App() {
     await updatePositionsInfo();
   };
 
+  const onAutoRefresh = () => {
+    startWebsocket();
+  };
+
   return (
     <>
       <h1>Playground</h1>
       <h4>Tokens:</h4>
-      <div>Spot:</div>
-      <select>
-        {spot.map((item) => (
-          <option key={item} value={item}>
-            {item}
-          </option>
-        ))}
-      </select>
-      <div>Perps</div>
-      <select>
-        {perps.map((item) => (
-          <option key={item} value={item}>
-            {item}
-          </option>
-        ))}
-      </select>
+      {prices && (
+        <>
+          <div>Coins:</div>
+          <div
+            style={{
+              height: '300px',
+              overflow: 'hidden',
+              overflowY: 'scroll',
+              border: '1px solid grey',
+            }}
+          >
+            <table>
+              <thead>
+                <tr>
+                  <th>Coin</th>
+                  <th>Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                {prices.map((priceObj) => (
+                  <tr key={`row-${priceObj.coin}`}>
+                    <td key={`coin-${priceObj.coin}`}>{priceObj.coin}</td>
+                    <td key={`price-$${priceObj.coin}`}>${priceObj.price}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
       <h4>Wallet</h4>
       <div>
         <div>Your private key:</div>
@@ -128,15 +185,20 @@ function App() {
       {perpBalances &&
         perpBalances.assetPositions.map((position, index) => (
           <div key={index}>
-            {position.position.coin}
-            {position.position.szi}
-            {position.position.entryPx}
-            {position.position.positionValue}
-            {position.position.marginUsed}
-            {position.position.unrealizedPnl}
+            {position.position.coin}&nbsp;
+            Size: {position.position.szi}&nbsp;
+            Entry price: ${position.position.entryPx}&nbsp;
+            Value: {position.position.positionValue}&nbsp;
+            Margin: ${position.position.marginUsed}&nbsp;
+            PnL: ${position.position.unrealizedPnl}&nbsp;
           </div>
         ))}
-      <button onClick={onPositionsRefresh}>Refresh</button>
+      <div>
+        <button onClick={onPositionsRefresh}>Refresh positions</button>
+      </div>
+      <div>
+        <button onClick={onAutoRefresh}>Enable real-time updates</button>
+      </div>
 
       <div style={{ color: 'red' }}>{error && error}</div>
     </>

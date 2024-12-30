@@ -14,9 +14,8 @@ import {
 import * as CONSTANTS from '../types/constants';
 
 import {
-  Builder,
   CancelOrderRequest,
-  Grouping,
+  LeverageModeEnum,
   Order,
   OrderRequest,
   OrderResponse,
@@ -229,10 +228,9 @@ export class ExchangeAPI {
     }
   }
 
-  //Update leverage. Set leverageMode to "cross" if you want cross leverage, otherwise it'll set it to "isolated by default"
   async updateLeverage(
     symbol: string,
-    leverageMode: string,
+    leverageMode: LeverageModeEnum,
     leverage: number,
   ): Promise<any> {
     try {
@@ -240,7 +238,7 @@ export class ExchangeAPI {
       const action = {
         type: ExchangeType.UPDATE_LEVERAGE,
         asset: assetIndex,
-        isCross: leverageMode === 'cross',
+        isCross: leverageMode === LeverageModeEnum.CROSS,
         leverage: leverage,
       };
       const nonce = Date.now();

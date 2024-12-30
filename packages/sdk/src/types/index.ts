@@ -52,6 +52,10 @@ export interface Meta {
   }[];
 }
 
+export interface ClearinghouseStateWithRoot {
+  clearinghouseState: ClearinghouseState;
+}
+
 export interface ClearinghouseState {
   assetPositions: {
     position: {
@@ -123,8 +127,13 @@ export interface OrderResponse {
   };
 }
 
+export enum LeverageModeEnum {
+  CROSS = 'cross',
+  ISOLATED = 'isolated',
+}
+
 export interface Leverage {
-  type: 'cross' | 'isolated';
+  type: LeverageModeEnum;
   value: number;
   rawUsd?: string;
 }
@@ -210,12 +219,20 @@ export interface WsNonUserCancel {
   oid: number;
 }
 
+export interface SpotClearinghouseStateWithRoot {
+  spotState: SpotClearinghouseState;
+}
+
+export interface SpotBalance {
+  coin: string;
+  hold: string;
+  total: string;
+  token: number;
+  entryNtl: string;
+}
+
 export interface SpotClearinghouseState {
-  balances: {
-    coin: string;
-    hold: string;
-    total: string;
-  }[];
+  balances: SpotBalance[];
 }
 
 export interface FrontendOpenOrders {
@@ -439,7 +456,10 @@ export interface Notification {
 }
 
 // As flexible as possible
-export interface WebData2 {
+export interface WebData2
+  extends ClearinghouseStateWithRoot,
+    SpotAssetCtx,
+    SpotClearinghouseStateWithRoot {
   [key: string]: any;
 }
 

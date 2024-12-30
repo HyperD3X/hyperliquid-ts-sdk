@@ -1,4 +1,3 @@
-import WebSocket from 'ws';
 import { EventEmitter } from 'events';
 
 import * as CONSTANTS from '../types/constants';
@@ -24,28 +23,28 @@ export class WebSocketClient extends EventEmitter {
     return new Promise((resolve, reject) => {
       this.ws = new WebSocket(this.url);
 
-      this.ws.on('open', () => {
+      this.ws.onopen = () => {
         console.log('WebSocket connected');
         this.reconnectAttempts = 0;
         this.startPingInterval();
         resolve();
-      });
+      };
 
-      this.ws.on('message', (data: WebSocket.Data) => {
-        const message = JSON.parse(data.toString());
+      this.ws.onmessage = (event: MessageEvent) => {
+        const message = JSON.parse(event.data.toString());
         this.emit('message', message);
-      });
+      };
 
-      this.ws.on('error', (error: Error) => {
-        console.error('WebSocket error:', error);
-        reject(error);
-      });
+      this.ws.onerror = (ev: Event) => {
+        console.error('WebSocket error:', ev);
+        reject('Something went wrong!');
+      };
 
-      this.ws.on('close', () => {
+      this.ws.onclose = () => {
         console.log('WebSocket disconnected');
         this.stopPingInterval();
         this.reconnect();
-      });
+      };
     });
   }
 
