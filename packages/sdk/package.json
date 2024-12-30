@@ -1,7 +1,7 @@
 {
   "name": "hyperliquid-sdk",
-  "version": "1.4.0",
-  "description": "",
+  "version": "1.4.1",
+  "description": "Typescript SDK for the Hyperliquid API",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -12,9 +12,17 @@
     "directory": "packages/sdk",
     "url": "git+https://github.com/evgeny-s/hyperliquid-ts-sdk.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "hyperliquid",
+    "typescript",
+    "sdk",
+    "api",
+    "sdk",
+    "dex",
+    "websocket"
+  ],
+  "author": "Evgeny Svirsky",
+  "license": "MIT",
   "dependencies": {
     "@msgpack/msgpack": "^3.0.0-beta2",
     "@types/ws": "^8.5.13",
