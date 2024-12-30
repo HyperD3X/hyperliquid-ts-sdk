@@ -3,7 +3,7 @@ import {
   SpotClearinghouseState,
   SpotMetaAndAssetCtxs,
 } from '../../types';
-import { HttpApi } from '../../utils/helpers';
+import { HttpApi, validatePublicKey } from '../../utils/helpers';
 import { InfoType } from '../../types/constants';
 import { SymbolConversion } from '../../utils/symbolConversion';
 
@@ -30,12 +30,14 @@ export class SpotInfoAPI {
   }
 
   async getSpotClearinghouseState(
-    user: string,
+    userPublicKey: string,
     rawResponse: boolean = false,
   ): Promise<SpotClearinghouseState> {
+    validatePublicKey(userPublicKey);
+
     const response = await this.httpApi.makeRequest({
       type: InfoType.SPOT_CLEARINGHOUSE_STATE,
-      user: user,
+      user: userPublicKey,
     });
     return rawResponse
       ? response

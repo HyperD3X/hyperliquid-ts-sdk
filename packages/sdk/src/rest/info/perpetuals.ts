@@ -6,7 +6,7 @@ import {
   UserNonFundingLedgerUpdates,
   FundingHistory,
 } from '../../types';
-import { HttpApi } from '../../utils/helpers';
+import { HttpApi, validatePublicKey } from '../../utils/helpers';
 import { InfoType } from '../../types/constants';
 import { SymbolConversion } from '../../utils/symbolConversion';
 
@@ -46,12 +46,14 @@ export class PerpetualsInfoAPI {
   }
 
   async getClearinghouseState(
-    user: string,
+    userPublicKey: string,
     rawResponse: boolean = false,
   ): Promise<ClearinghouseState> {
+    validatePublicKey(userPublicKey);
+
     const response = await this.httpApi.makeRequest({
       type: InfoType.PERPS_CLEARINGHOUSE_STATE,
-      user: user,
+      user: userPublicKey,
     });
     return rawResponse
       ? response
@@ -59,15 +61,17 @@ export class PerpetualsInfoAPI {
   }
 
   async getUserFunding(
-    user: string,
+    userPublicKey: string,
     startTime: number,
     endTime?: number,
     rawResponse: boolean = false,
   ): Promise<UserFunding> {
+    validatePublicKey(userPublicKey);
+
     const response = await this.httpApi.makeRequest(
       {
         type: InfoType.USER_FUNDING,
-        user: user,
+        user: userPublicKey,
         startTime: startTime,
         endTime: endTime,
       },
@@ -79,15 +83,17 @@ export class PerpetualsInfoAPI {
   }
 
   async getUserNonFundingLedgerUpdates(
-    user: string,
+    userPublicKey: string,
     startTime: number,
     endTime?: number,
     rawResponse: boolean = false,
   ): Promise<UserNonFundingLedgerUpdates> {
+    validatePublicKey(userPublicKey);
+
     const response = await this.httpApi.makeRequest(
       {
         type: InfoType.USER_NON_FUNDING_LEDGER_UPDATES,
-        user: user,
+        user: userPublicKey,
         startTime: startTime,
         endTime: endTime,
       },

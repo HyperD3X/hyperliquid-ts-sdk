@@ -15,7 +15,7 @@ export interface Order extends BaseOrder {
   orders?: undefined;
   coin: string;
   is_buy: boolean;
-  sz: number;
+  sz: number; // The size of the position in unit (not decimal). sz === 1 -> 1.00 if szDecimals is 2.
   limit_px: number;
   order_type: OrderType;
   reduce_only: boolean;
@@ -117,6 +117,7 @@ export interface OrderResponse {
       statuses: Array<{
         resting?: { oid: number };
         filled?: { oid: number };
+        error?: string;
       }>;
     };
   };

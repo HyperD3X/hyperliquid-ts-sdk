@@ -19,6 +19,7 @@ import {
   Grouping,
   Order,
   OrderRequest,
+  OrderResponse,
 } from '../types/index';
 
 import { ExchangeType, ENDPOINTS } from '../types/constants';
@@ -58,18 +59,11 @@ export class ExchangeAPI {
     if (index === undefined) {
       throw new Error(`Unknown asset: ${symbol}`);
     }
-    if (!this._i) {
-      this._i = 1;
-      setTimeout(() => {
-        try {
-          this.setReferrer(CONSTANTS.SDK_CODE);
-        } catch {}
-      });
-    }
     return index;
   }
 
-  async placeOrder(orderRequest: OrderRequest): Promise<any> {
+  // TODO: Implement market order with slippage calculation
+  async placeOrder(orderRequest: OrderRequest): Promise<OrderResponse> {
     const {
       orders,
       vaultAddress = null,
