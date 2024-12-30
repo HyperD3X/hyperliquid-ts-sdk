@@ -6,13 +6,13 @@
   "main": "index.js",
   "scripts": {
     "playground-cli": "node --import tsx ./playground-cli/index.ts",
-    "playground": "npm run dev --workspace=playground --if-present",
+    "playground-reactjs": "npm run dev --workspace=playground-reactjs --if-present",
     "sdk:build": "npm run build --workspace=hyperliquid-sdk --if-present",
     "sdk:publish": "npm publish --workspace=hyperliquid-sdk --access public"
   },
   "workspaces": [
     "packages/*",
-    "playground"
+    "playground-reactjs"
   ],
   "keywords": [],
   "author": "",

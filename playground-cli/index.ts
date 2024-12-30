@@ -5,6 +5,8 @@ async function main() {
   const walletPrivateKey = '';
 
   const sdk = new Hyperliquid(walletPrivateKey);
+  await sdk.connect();
+
   await testInfoAPI(sdk);
 
   await testSpotInfoAPI(sdk);

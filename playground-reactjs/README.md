@@ -4,5 +4,5 @@
 ```
 cd <root repo folder>
 nvm exec npm i
-nvm exec npm run playground
+nvm exec npm run playground-reactjs
 ```

@@ -185,12 +185,11 @@ function App() {
       {perpBalances &&
         perpBalances.assetPositions.map((position, index) => (
           <div key={index}>
-            {position.position.coin}&nbsp;
-            Size: {position.position.szi}&nbsp;
-            Entry price: ${position.position.entryPx}&nbsp;
-            Value: {position.position.positionValue}&nbsp;
-            Margin: ${position.position.marginUsed}&nbsp;
-            PnL: ${position.position.unrealizedPnl}&nbsp;
+            {position.position.coin}&nbsp; Size: {position.position.szi}&nbsp;
+            Entry price: ${position.position.entryPx}&nbsp; Value:{' '}
+            {position.position.positionValue}&nbsp; Margin: $
+            {position.position.marginUsed}&nbsp; PnL: $
+            {position.position.unrealizedPnl}&nbsp;
           </div>
         ))}
       <div>

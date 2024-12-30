@@ -9,7 +9,7 @@ nvm exec npm run playground-cli
 ### How to run ReactJS playground:
 ```
 nvm exec npm i
-nvm exec npm run playground
+nvm exec npm run playground-reactjs
 ```
 
 [SDK documentation](./packages/sdk/README.md)
