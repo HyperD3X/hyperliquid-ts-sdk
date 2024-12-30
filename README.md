@@ -1,15 +1,21 @@
-# Typescript SDK wrapper for the Hyperliquid DEX with the working examples
+# Toolkit for Hyperliquid API
+Includes:
+- SDK
+- Examples for NodeJS apps
+- Examples for ReactJS apps
 
-### How to run CLI playground:
+## [SDK documentation](./packages/sdk/README.md)
+
+## Examples
+CLI example for NodeJS dApps:
 ```
 nvm exec npm i
 nvm exec npm run playground-cli
 ```
 
-### How to run ReactJS playground:
+ReactJS example:
 ```
 nvm exec npm i
 nvm exec npm run playground-reactjs
 ```
 
-[SDK documentation](./packages/sdk/README.md)
