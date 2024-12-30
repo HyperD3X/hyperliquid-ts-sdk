@@ -14,11 +14,11 @@ import {
 import * as CONSTANTS from '../types/constants';
 
 import {
-  Builder,
   CancelOrderRequest,
-  Grouping,
+  LeverageModeEnum,
   Order,
   OrderRequest,
+  OrderResponse,
 } from '../types/index';
 
 import { ExchangeType, ENDPOINTS } from '../types/constants';
@@ -58,18 +58,11 @@ export class ExchangeAPI {
     if (index === undefined) {
       throw new Error(`Unknown asset: ${symbol}`);
     }
-    if (!this._i) {
-      this._i = 1;
-      setTimeout(() => {
-        try {
-          this.setReferrer(CONSTANTS.SDK_CODE);
-        } catch {}
-      });
-    }
     return index;
   }
 
-  async placeOrder(orderRequest: OrderRequest): Promise<any> {
+  // TODO: Implement market order with slippage calculation
+  async placeOrder(orderRequest: OrderRequest): Promise<OrderResponse> {
     const {
       orders,
       vaultAddress = null,
@@ -235,10 +228,9 @@ export class ExchangeAPI {
     }
   }
 
-  //Update leverage. Set leverageMode to "cross" if you want cross leverage, otherwise it'll set it to "isolated by default"
   async updateLeverage(
     symbol: string,
-    leverageMode: string,
+    leverageMode: LeverageModeEnum,
     leverage: number,
   ): Promise<any> {
     try {
@@ -246,7 +238,7 @@ export class ExchangeAPI {
       const action = {
         type: ExchangeType.UPDATE_LEVERAGE,
         asset: assetIndex,
-        isCross: leverageMode === 'cross',
+        isCross: leverageMode === LeverageModeEnum.CROSS,
         leverage: leverage,
       };
       const nonce = Date.now();

@@ -15,7 +15,7 @@ export interface Order extends BaseOrder {
   orders?: undefined;
   coin: string;
   is_buy: boolean;
-  sz: number;
+  sz: number; // The size of the position in unit (not decimal). sz === 1 -> 1.00 if szDecimals is 2.
   limit_px: number;
   order_type: OrderType;
   reduce_only: boolean;
@@ -50,6 +50,10 @@ export interface Meta {
     maxLeverage: number;
     onlyIsolated: boolean;
   }[];
+}
+
+export interface ClearinghouseStateWithRoot {
+  clearinghouseState: ClearinghouseState;
 }
 
 export interface ClearinghouseState {
@@ -117,13 +121,19 @@ export interface OrderResponse {
       statuses: Array<{
         resting?: { oid: number };
         filled?: { oid: number };
+        error?: string;
       }>;
     };
   };
 }
 
+export enum LeverageModeEnum {
+  CROSS = 'cross',
+  ISOLATED = 'isolated',
+}
+
 export interface Leverage {
-  type: 'cross' | 'isolated';
+  type: LeverageModeEnum;
   value: number;
   rawUsd?: string;
 }
@@ -209,12 +219,20 @@ export interface WsNonUserCancel {
   oid: number;
 }
 
+export interface SpotClearinghouseStateWithRoot {
+  spotState: SpotClearinghouseState;
+}
+
+export interface SpotBalance {
+  coin: string;
+  hold: string;
+  total: string;
+  token: number;
+  entryNtl: string;
+}
+
 export interface SpotClearinghouseState {
-  balances: {
-    coin: string;
-    hold: string;
-    total: string;
-  }[];
+  balances: SpotBalance[];
 }
 
 export interface FrontendOpenOrders {
@@ -438,7 +456,10 @@ export interface Notification {
 }
 
 // As flexible as possible
-export interface WebData2 {
+export interface WebData2
+  extends ClearinghouseStateWithRoot,
+    SpotAssetCtx,
+    SpotClearinghouseStateWithRoot {
   [key: string]: any;
 }
 

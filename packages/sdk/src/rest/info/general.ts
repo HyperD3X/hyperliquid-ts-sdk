@@ -10,7 +10,7 @@ import {
   L2Book,
   CandleSnapshot,
 } from '../../types';
-import { HttpApi } from '../../utils/helpers';
+import { HttpApi, validatePublicKey } from '../../utils/helpers';
 import { SymbolConversion } from '../../utils/symbolConversion';
 import { InfoType } from '../../types/constants';
 
@@ -21,12 +21,6 @@ export class GeneralInfoAPI {
   constructor(httpApi: HttpApi, symbolConversion: SymbolConversion) {
     this.httpApi = httpApi;
     this.symbolConversion = symbolConversion;
-  }
-
-  private validatePublicKey(publicKey: string): void {
-    if (!publicKey) {
-      throw new Error('Public Key is required!');
-    }
   }
 
   async getAllMids(rawResponse: boolean = false): Promise<AllMids> {
@@ -50,7 +44,7 @@ export class GeneralInfoAPI {
     userPublicKey: string,
     rawResponse: boolean = false,
   ): Promise<UserOpenOrders> {
-    this.validatePublicKey(userPublicKey);
+    validatePublicKey(userPublicKey);
 
     const response = await this.httpApi.makeRequest({
       type: InfoType.OPEN_ORDERS,
@@ -66,7 +60,7 @@ export class GeneralInfoAPI {
     userPublicKey: string,
     rawResponse: boolean = false,
   ): Promise<FrontendOpenOrders> {
-    this.validatePublicKey(userPublicKey);
+    validatePublicKey(userPublicKey);
 
     const response = await this.httpApi.makeRequest(
       { type: InfoType.FRONTEND_OPEN_ORDERS, user: userPublicKey },
@@ -81,7 +75,7 @@ export class GeneralInfoAPI {
     userPublicKey: string,
     rawResponse: boolean = false,
   ): Promise<UserFills> {
-    this.validatePublicKey(userPublicKey);
+    validatePublicKey(userPublicKey);
     const response = await this.httpApi.makeRequest(
       { type: InfoType.USER_FILLS, user: userPublicKey },
       20,
@@ -97,7 +91,7 @@ export class GeneralInfoAPI {
     endTime?: number,
     rawResponse: boolean = false,
   ): Promise<UserFills> {
-    this.validatePublicKey(userPublicKey);
+    validatePublicKey(userPublicKey);
 
     let params: {
       user: string;
@@ -124,7 +118,7 @@ export class GeneralInfoAPI {
     userPublicKey: string,
     rawResponse: boolean = false,
   ): Promise<UserRateLimit> {
-    this.validatePublicKey(userPublicKey);
+    validatePublicKey(userPublicKey);
 
     const response = await this.httpApi.makeRequest(
       { type: InfoType.USER_RATE_LIMIT, user: userPublicKey },
@@ -140,7 +134,7 @@ export class GeneralInfoAPI {
     oid: number | string,
     rawResponse: boolean = false,
   ): Promise<OrderStatus> {
-    this.validatePublicKey(userPublicKey);
+    validatePublicKey(userPublicKey);
 
     const response = await this.httpApi.makeRequest({
       type: InfoType.ORDER_STATUS,

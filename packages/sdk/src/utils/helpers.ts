@@ -37,3 +37,9 @@ export class HttpApi {
     }
   }
 }
+
+export const validatePublicKey = (publicKey: string): void => {
+  if (!publicKey) {
+    throw new Error('Public Key is required!');
+  }
+};
