@@ -23,7 +23,6 @@ import {
 
 import { ExchangeType, ENDPOINTS } from '../types/constants';
 import { SymbolConversion } from '../utils/symbolConversion';
-import { floatToWire } from '../utils/signing';
 
 // const IS_MAINNET = true; // Make sure this matches the IS_MAINNET in signing.ts
 
@@ -33,7 +32,6 @@ export class ExchangeAPI {
   private symbolConversion: SymbolConversion;
   private IS_MAINNET = true;
   private walletAddress: string | null;
-  private _i = 0;
 
   constructor(
     testnet: boolean,

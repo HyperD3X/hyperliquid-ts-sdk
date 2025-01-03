@@ -52,10 +52,6 @@ export interface Meta {
   }[];
 }
 
-export interface ClearinghouseStateWithRoot {
-  clearinghouseState: ClearinghouseState;
-}
-
 export interface ClearinghouseState {
   assetPositions: {
     position: {
@@ -219,10 +215,6 @@ export interface WsNonUserCancel {
   oid: number;
 }
 
-export interface SpotClearinghouseStateWithRoot {
-  spotState: SpotClearinghouseState;
-}
-
 export interface SpotBalance {
   coin: string;
   hold: string;
@@ -304,7 +296,9 @@ export interface CandleSnapshot {
 }
 [];
 
+// Perps assets context
 export interface AssetCtx {
+  dayBaseVlm: string;
   dayNtlVlm: string;
   funding: string;
   impactPxs: [string, string];
@@ -316,6 +310,7 @@ export interface AssetCtx {
   prevDayPx: string;
 }
 
+// Perpetuals
 export interface MetaAndAssetCtxs {
   meta: Meta;
   assetCtxs: AssetCtx[];
@@ -388,6 +383,13 @@ export interface SpotAssetCtx {
   prevDayPx: string;
 }
 
+export interface SpotAssetCtxExtended extends SpotAssetCtx {
+  circulatingSupply: string;
+  coin: string;
+  dayBaseVlm: string;
+  totalSupply: string;
+}
+
 export interface SpotMetaAndAssetCtxs {
   meta: SpotMeta;
   assetCtxs: SpotAssetCtx[];
@@ -456,11 +458,17 @@ export interface Notification {
 }
 
 // As flexible as possible
-export interface WebData2
-  extends ClearinghouseStateWithRoot,
-    SpotAssetCtx,
-    SpotClearinghouseStateWithRoot {
-  [key: string]: any;
+export interface WebData2 extends MetaAndAssetCtxs {
+  spotAssetCtxs: SpotAssetCtxExtended[];
+  clearinghouseState: ClearinghouseState;
+  spotState: SpotClearinghouseState;
+  serverTime: number;
+  totalVaultEquity: string;
+  user: string;
+  agentAddress: string;
+  agentValidUntil: number;
+  cumLedger: string;
+  isVault: boolean;
 }
 
 export interface Candle {
