@@ -3,6 +3,7 @@ import {
   AllMids,
   ClearinghouseState,
   Hyperliquid,
+  LeverageModeEnum,
   SpotClearinghouseState,
 } from 'hyperliquid-sdk';
 import { ethers } from 'ethers';
@@ -83,25 +84,21 @@ function App() {
   const buySpot = async () => {
     resetError();
 
-    const apiResponse = await sdk.exchange.placeOrder({
-      coin: 'HYPE-SPOT',
-      is_buy: true,
-      sz: 0.01,
-      limit_px: 29,
-      order_type: { limit: { tif: 'Ioc' } },
-      reduce_only: false,
-    });
+    const coin = 'PURR-SPOT';
+
+    const apiResponse = await sdk.custom.marketOpen(coin, true, 1);
 
     if (apiResponse.response.data.statuses.find((status) => !!status.error)) {
       setError(JSON.stringify(apiResponse.response.data.statuses));
     }
   };
+
   const buyPerp = async () => {
     resetError();
 
     const coin = 'HYPE-PERP';
 
-    await sdk.exchange.updateLeverage(coin, 'isolated', 3);
+    await sdk.exchange.updateLeverage(coin, LeverageModeEnum.ISOLATED, 3);
 
     const apiResponse = await sdk.exchange.placeOrder({
       coin,
@@ -173,7 +170,7 @@ function App() {
       </div>
       {publicKey && <div>Your public key: {publicKey}</div>}
       <h4>Purchase:</h4>
-      <button onClick={buySpot}>Buy spot (HYPE for $0.01)</button>
+      <button onClick={buySpot}>Buy spot (PURR for $0.01)</button>
       <button onClick={buyPerp}>Buy perp (HYPE for $0.01)</button>
       <h4>Positions:</h4>
       {spotBalances &&

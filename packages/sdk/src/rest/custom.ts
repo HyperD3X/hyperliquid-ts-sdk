@@ -97,7 +97,8 @@ export class CustomOperations {
     console.log(decimals);
 
     px *= isBuy ? 1 + slippage : 1 - slippage;
-    return Number(px.toFixed(isSpot ? 8 : decimals - 1));
+    const spotDecimals = px < 1 ? 6 : 8; // TODO: Check the calculation here: https://github.com/ccxt/ccxt/issues/23516 and here: https://github.com/gaardiolor/ccxt/commit/de43976f408007bf2a8555141b13936735645702#diff-bafe810770b7e09d82844d4f5b0efc778f4e2024f8dfb7973faa9cf603d0ca0eR456
+    return Number(px.toFixed(isSpot ? spotDecimals : decimals - 1));
   }
 
   async marketOpen(
@@ -115,8 +116,6 @@ export class CustomOperations {
       slippage,
       px,
     );
-    console.log('Slippage Price: ', slippagePrice);
-
     const orderRequest: OrderRequest = {
       coin: convertedSymbol,
       is_buy: isBuy,
@@ -129,7 +128,9 @@ export class CustomOperations {
     if (cloid) {
       orderRequest.cloid = cloid;
     }
-    console.log(orderRequest);
+
+    console.log('orderRequest', orderRequest);
+
     return this.exchange.placeOrder(orderRequest);
   }
 

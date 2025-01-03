@@ -217,10 +217,10 @@ export interface WsNonUserCancel {
 
 export interface SpotBalance {
   coin: string;
-  hold: string;
-  total: string;
+  hold: number;
+  total: number;
   token: number;
-  entryNtl: string;
+  entryNtl: number;
 }
 
 export interface SpotClearinghouseState {
@@ -298,13 +298,13 @@ export interface CandleSnapshot {
 
 // Perps assets context
 export interface AssetCtx {
-  dayBaseVlm: string;
-  dayNtlVlm: string;
-  funding: string;
+  dayBaseVlm: string; // TODO: Check data type, it's number
+  dayNtlVlm: string; // TODO: Check data type, it's number
+  funding: string; // TODO: Check data type, it's number
   impactPxs: [string, string];
-  markPx: string;
-  midPx: string;
-  openInterest: string;
+  markPx: string; // TODO: Check data type, it's number
+  midPx: string; // TODO: Check data type, it's number
+  openInterest: string; // TODO: Check data type, it's number
   oraclePx: string;
   premium: string;
   prevDayPx: string;
@@ -386,7 +386,7 @@ export interface SpotAssetCtx {
 export interface SpotAssetCtxExtended extends SpotAssetCtx {
   circulatingSupply: string;
   coin: string;
-  dayBaseVlm: string;
+  dayBaseVlm: string; // TODO: Check data type, it's number
   totalSupply: string;
 }
 
