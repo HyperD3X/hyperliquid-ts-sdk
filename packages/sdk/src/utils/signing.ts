@@ -4,7 +4,6 @@ import { ethers, getBytes, HDNodeWallet, keccak256, type Wallet } from 'ethers';
 import type {
   Builder,
   Order,
-  OrderRequest,
   OrderType,
   OrderWire,
   Signature,
@@ -249,7 +248,12 @@ export interface CancelOrderResponse {
   response: {
     type: string;
     data: {
-      statuses: string[];
+      statuses: Array<
+        | {
+            error?: string;
+          }
+        | string
+      >;
     };
   };
 }
