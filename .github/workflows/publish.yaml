@@ -1,6 +1,9 @@
 name: Publish SDK
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
