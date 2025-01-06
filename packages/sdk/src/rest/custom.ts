@@ -133,7 +133,7 @@ export class CustomOperations {
       orderRequest.cloid = cloid;
     }
 
-    console.log('orderRequest', orderRequest);
+    console.debug('Order Request payload: ', orderRequest);
 
     return this.exchange.placeOrder(orderRequest);
   }

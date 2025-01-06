@@ -61,6 +61,7 @@ export class SymbolConversion {
   }
 
   private startPeriodicRefresh(): void {
+    // TODO: Remove interval
     this.refreshInterval = setInterval(() => {
       this.refreshAssetMaps();
     }, this.refreshIntervalMs);

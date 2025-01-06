@@ -40,7 +40,7 @@ export interface Builder {
 }
 
 export interface AllMids {
-  [coin: string]: string;
+  [coin: string]: number;
 }
 
 export interface Meta {
@@ -124,12 +124,9 @@ export interface OrderResponse {
 export interface CommonSuccessOrErrorResponse {
   type: string;
   data: {
-    statuses: Array<
-      | {
-          error?: string;
-        }
-      | string
-    >;
+    statuses: Array<{
+      error?: string;
+    }>;
   };
 }
 

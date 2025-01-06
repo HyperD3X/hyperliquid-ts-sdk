@@ -24,22 +24,18 @@ export class GeneralInfoAPI {
     this.symbolConversion = symbolConversion;
   }
 
-  async getAllMids(rawResponse: boolean = false): Promise<AllMids> {
-    // TODO: Check if this response can be common type ApiResponseWithStatus
-    const response = await this.httpApi.makeRequest<any>({
+  async getAllMids(): Promise<AllMids> {
+    const response = await this.httpApi.makeRequest<{ [key: string]: string }>({
       type: InfoType.ALL_MIDS,
     });
 
-    if (rawResponse) {
-      return response;
-    } else {
-      const convertedResponse: any = {};
-      for (const [key, value] of Object.entries(response)) {
-        const convertedKey = await this.symbolConversion.convertSymbol(key);
-        convertedResponse[convertedKey] = parseFloat(value as string);
-      }
-      return convertedResponse;
+    const convertedResponse: { [key: string]: number } = {};
+    for (const [key, value] of Object.entries(response)) {
+      const convertedKey = await this.symbolConversion.convertSymbol(key);
+      convertedResponse[convertedKey] = parseFloat(value);
     }
+
+    return convertedResponse;
   }
 
   async getUserOpenOrders(

@@ -54,10 +54,8 @@ export class InfoAPI {
     return await this.symbolConversion.getAllAssets();
   }
 
-  async getAllMids(
-    rawResponse: boolean = false,
-  ): Promise<AllMids> {
-    return this.generalAPI.getAllMids(rawResponse);
+  async getAllMids(): Promise<AllMids> {
+    return this.generalAPI.getAllMids();
   }
 
   async getReferralState(

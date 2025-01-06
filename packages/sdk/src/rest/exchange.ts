@@ -97,10 +97,34 @@ export class ExchangeAPI {
       );
 
       const payload = { action: actions, nonce, signature, vaultAddress };
-      return this.httpApi.makeRequest(payload, 1);
+
+      const result = await this.httpApi.makeRequest<
+        ApiResponseWithStatus<OrderResponse>
+      >(payload, 1);
+
+      return this.validateErrorResult(result);
     } catch (error) {
       throw error;
     }
+  }
+
+  private validateErrorResult(
+    result: ApiResponseWithStatus<OrderResponse>,
+  ): ApiResponseWithStatus<OrderResponse> {
+    if (typeof result.response !== 'string') {
+      const status = result.response.data.statuses.find(
+        (status) => !!status.error,
+      );
+      if (status) {
+        throw new Error(status.error);
+      }
+    }
+
+    if (result.status !== 'ok' && typeof result.response === 'string') {
+      throw new Error(result.response);
+    }
+
+    return result;
   }
 
   //Cancel using order id (oid)
@@ -312,7 +336,7 @@ export class ExchangeAPI {
       return this.httpApi.makeRequest(
         payload,
         1,
-        this.walletAddress || this.wallet.address,
+        // this.walletAddress || this.wallet.address, // TODO: Add another client for this API
       );
     } catch (error) {
       throw error;
