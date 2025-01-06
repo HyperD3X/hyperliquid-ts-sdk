@@ -56,6 +56,15 @@ export class GeneralInfoAPI {
       : await this.symbolConversion.convertResponse(response);
   }
 
+  async getReferralState(userPublicKey: string): Promise<UserOpenOrders> {
+    validatePublicKey(userPublicKey);
+
+    return this.httpApi.makeRequest({
+      type: InfoType.REFERRAL,
+      user: userPublicKey,
+    });
+  }
+
   async getFrontendOpenOrders(
     userPublicKey: string,
     rawResponse: boolean = false,

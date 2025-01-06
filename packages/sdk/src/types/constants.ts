@@ -17,6 +17,7 @@ export enum InfoType {
   ALL_MIDS = 'allMids',
   META = 'meta',
   OPEN_ORDERS = 'openOrders',
+  REFERRAL = 'referral',
   FRONTEND_OPEN_ORDERS = 'frontendOpenOrders',
   USER_FILLS = 'userFills',
   USER_FILLS_BY_TIME = 'userFillsByTime',
