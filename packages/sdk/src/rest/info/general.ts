@@ -9,6 +9,7 @@ import {
   OrderStatus,
   L2Book,
   CandleSnapshot,
+  ApiResponseWithStatus,
 } from '../../types';
 import { HttpApi, validatePublicKey } from '../../utils/helpers';
 import { SymbolConversion } from '../../utils/symbolConversion';
@@ -24,7 +25,8 @@ export class GeneralInfoAPI {
   }
 
   async getAllMids(rawResponse: boolean = false): Promise<AllMids> {
-    const response = await this.httpApi.makeRequest({
+    // TODO: Check if this response can be common type ApiResponseWithStatus
+    const response = await this.httpApi.makeRequest<any>({
       type: InfoType.ALL_MIDS,
     });
 
@@ -56,10 +58,12 @@ export class GeneralInfoAPI {
       : await this.symbolConversion.convertResponse(response);
   }
 
-  async getReferralState(userPublicKey: string): Promise<UserOpenOrders> {
+  async getReferralState(
+    userPublicKey: string,
+  ): Promise<ApiResponseWithStatus<string>> {
     validatePublicKey(userPublicKey);
 
-    return this.httpApi.makeRequest({
+    return this.httpApi.makeRequest<ApiResponseWithStatus<string>>({
       type: InfoType.REFERRAL,
       user: userPublicKey,
     });

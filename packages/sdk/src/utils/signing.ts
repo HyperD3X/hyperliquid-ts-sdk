@@ -243,21 +243,6 @@ export function orderWireToAction(
   };
 }
 
-export interface CancelOrderResponse {
-  status: string;
-  response: {
-    type: string;
-    data: {
-      statuses: Array<
-        | {
-            error?: string;
-          }
-        | string
-      >;
-    };
-  };
-}
-
 export function cancelOrderToAction(cancelRequest: CancelOrderRequest): any {
   return {
     type: 'cancel',

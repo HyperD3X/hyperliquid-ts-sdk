@@ -22,15 +22,17 @@ export class HttpApi {
     this.rateLimiter = rateLimiter;
   }
 
-  async makeRequest(
+  async makeRequest<T>(
     payload: any,
     weight: number = 2,
     endpoint: string = this.endpoint,
-  ): Promise<any> {
+  ): Promise<T> {
     try {
       await this.rateLimiter.waitForToken(weight);
 
       const response = await this.client.post(endpoint, payload);
+
+      // TODO: Add checker for soft errors here!
       return response.data;
     } catch (error) {
       handleApiError(error);

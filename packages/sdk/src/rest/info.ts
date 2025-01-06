@@ -7,7 +7,6 @@ import { SymbolConversion } from '../utils/symbolConversion';
 
 import {
   AllMids,
-  Meta,
   UserOpenOrders,
   FrontendOpenOrders,
   UserFills,
@@ -15,6 +14,7 @@ import {
   OrderStatus,
   L2Book,
   CandleSnapshot,
+  ApiResponseWithStatus,
 } from '../types/index';
 
 import { InfoType, ENDPOINTS } from '../types/constants';
@@ -54,8 +54,16 @@ export class InfoAPI {
     return await this.symbolConversion.getAllAssets();
   }
 
-  async getAllMids(rawResponse: boolean = false): Promise<AllMids> {
+  async getAllMids(
+    rawResponse: boolean = false,
+  ): Promise<AllMids> {
     return this.generalAPI.getAllMids(rawResponse);
+  }
+
+  async getReferralState(
+    userPublicKey: string,
+  ): Promise<ApiResponseWithStatus<string>> {
+    return this.generalAPI.getReferralState(userPublicKey);
   }
 
   async getUserOpenOrders(

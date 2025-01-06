@@ -22,10 +22,12 @@ export class SymbolConversion {
   private async refreshAssetMaps(): Promise<void> {
     try {
       const [perpMeta, spotMeta] = await Promise.all([
-        this.httpApi.makeRequest({
+        // TODO: Fix any
+        this.httpApi.makeRequest<any>({
           type: CONSTANTS.InfoType.PERPS_META_AND_ASSET_CTXS,
         }),
-        this.httpApi.makeRequest({
+        // TODO: Fix any
+        this.httpApi.makeRequest<any>({
           type: CONSTANTS.InfoType.SPOT_META_AND_ASSET_CTXS,
         }),
       ]);

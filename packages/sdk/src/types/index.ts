@@ -109,18 +109,33 @@ export interface UserFills {
 }
 [];
 
+// TODO: Check if this response can be changed to CommonSuccessOrErrorResponse as extension
 export interface OrderResponse {
-  status: string;
-  response: {
-    type: string;
-    data: {
-      statuses: Array<{
-        resting?: { oid: number };
-        filled?: { oid: number };
-        error?: string;
-      }>;
-    };
+  type: string;
+  data: {
+    statuses: Array<{
+      resting?: { oid: number };
+      filled?: { oid: number };
+      error?: string;
+    }>;
   };
+}
+
+export interface CommonSuccessOrErrorResponse {
+  type: string;
+  data: {
+    statuses: Array<
+      | {
+          error?: string;
+        }
+      | string
+    >;
+  };
+}
+
+export interface ApiResponseWithStatus<T> {
+  status: string;
+  response: T;
 }
 
 export enum LeverageModeEnum {

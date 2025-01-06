@@ -6,7 +6,6 @@ import {
   signL1Action,
   orderToWire,
   orderWireToAction,
-  CancelOrderResponse,
   signUserSignedAction,
   signUsdTransferAction,
   signWithdrawFromBridgeAction,
@@ -15,10 +14,12 @@ import * as CONSTANTS from '../types/constants';
 
 import {
   CancelOrderRequest,
+  CommonSuccessOrErrorResponse,
   LeverageModeEnum,
   Order,
   OrderRequest,
   OrderResponse,
+  ApiResponseWithStatus,
 } from '../types/index';
 
 import { ExchangeType, ENDPOINTS } from '../types/constants';
@@ -59,8 +60,9 @@ export class ExchangeAPI {
     return index;
   }
 
-  // TODO: Implement market order with slippage calculation
-  async placeOrder(orderRequest: OrderRequest): Promise<OrderResponse> {
+  async placeOrder(
+    orderRequest: OrderRequest,
+  ): Promise<ApiResponseWithStatus<OrderResponse>> {
     const {
       orders,
       vaultAddress = null,
@@ -104,7 +106,7 @@ export class ExchangeAPI {
   //Cancel using order id (oid)
   async cancelOrder(
     cancelRequests: CancelOrderRequest | CancelOrderRequest[],
-  ): Promise<CancelOrderResponse> {
+  ): Promise<ApiResponseWithStatus<CommonSuccessOrErrorResponse>> {
     try {
       const cancels = Array.isArray(cancelRequests)
         ? cancelRequests
@@ -133,7 +135,9 @@ export class ExchangeAPI {
       );
 
       const payload = { action, nonce, signature };
-      return this.httpApi.makeRequest(payload, 1);
+      return this.httpApi.makeRequest<
+        ApiResponseWithStatus<CommonSuccessOrErrorResponse>
+      >(payload, 1);
     } catch (error) {
       throw error;
     }
@@ -230,7 +234,7 @@ export class ExchangeAPI {
     symbol: string,
     leverageMode: LeverageModeEnum,
     leverage: number,
-  ): Promise<any> {
+  ): Promise<ApiResponseWithStatus<CommonSuccessOrErrorResponse>> {
     try {
       const assetIndex = await this.getAssetIndex(symbol);
       const action = {
@@ -249,7 +253,9 @@ export class ExchangeAPI {
       );
 
       const payload = { action, nonce, signature };
-      return this.httpApi.makeRequest(payload, 1);
+      return this.httpApi.makeRequest<
+        ApiResponseWithStatus<CommonSuccessOrErrorResponse>
+      >(payload, 1);
     } catch (error) {
       throw error;
     }
@@ -468,7 +474,9 @@ export class ExchangeAPI {
       );
 
       const payload = { action, nonce, signature };
-      return this.httpApi.makeRequest(payload, 1);
+      return this.httpApi.makeRequest<
+        ApiResponseWithStatus<CommonSuccessOrErrorResponse>
+      >(payload, 1);
     } catch (error) {
       throw error;
     }
