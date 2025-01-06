@@ -9,7 +9,7 @@ import {
   OrderStatus,
   L2Book,
   CandleSnapshot,
-  ApiResponseWithStatus,
+  ReferralStateResponse,
 } from '../../types';
 import { HttpApi, validatePublicKey } from '../../utils/helpers';
 import { SymbolConversion } from '../../utils/symbolConversion';
@@ -56,10 +56,10 @@ export class GeneralInfoAPI {
 
   async getReferralState(
     userPublicKey: string,
-  ): Promise<ApiResponseWithStatus<string>> {
+  ): Promise<ReferralStateResponse> {
     validatePublicKey(userPublicKey);
 
-    return this.httpApi.makeRequest<ApiResponseWithStatus<string>>({
+    return this.httpApi.makeRequest<ReferralStateResponse>({
       type: InfoType.REFERRAL,
       user: userPublicKey,
     });

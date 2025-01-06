@@ -235,6 +235,24 @@ export interface SpotBalance {
   entryNtl: number;
 }
 
+export interface ReferralStateResponse {
+  builderRewards: string;
+  claimedRewards: string;
+  cumVlm: string;
+  referredBy: {
+    code: string;
+    referrer: string;
+  };
+  referrerState: {
+    data: {
+      required: string;
+    };
+    stage: string;
+  };
+  rewardHistory: string[]; // TODO: check the type
+  unclaimedRewards: string;
+}
+
 export interface SpotClearinghouseState {
   balances: SpotBalance[];
 }

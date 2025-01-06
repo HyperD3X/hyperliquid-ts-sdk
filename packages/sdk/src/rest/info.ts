@@ -14,7 +14,7 @@ import {
   OrderStatus,
   L2Book,
   CandleSnapshot,
-  ApiResponseWithStatus,
+  ReferralStateResponse,
 } from '../types/index';
 
 import { InfoType, ENDPOINTS } from '../types/constants';
@@ -60,7 +60,7 @@ export class InfoAPI {
 
   async getReferralState(
     userPublicKey: string,
-  ): Promise<ApiResponseWithStatus<string>> {
+  ): Promise<ReferralStateResponse> {
     return this.generalAPI.getReferralState(userPublicKey);
   }
 
