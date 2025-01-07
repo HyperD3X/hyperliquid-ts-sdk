@@ -1,10 +1,11 @@
 import axios, { AxiosInstance } from 'axios';
-import { handleApiError } from './errors';
+import { handleApiError, HyperliquidAPIError } from './errors';
 import { RateLimiter } from './rateLimiter';
 
 export class HttpApi {
   private client: AxiosInstance;
   private endpoint: string;
+  // TODO: Rework rate limiter
   private rateLimiter: RateLimiter;
 
   constructor(
@@ -27,8 +28,15 @@ export class HttpApi {
       await this.rateLimiter.waitForToken(weight);
 
       return (await this.client.post(this.endpoint, payload)).data;
-    } catch (error) {
-      handleApiError(error);
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        handleApiError(error);
+      } else if (error instanceof Error) {
+        throw new HyperliquidAPIError(`Unknown error: ${error.message}`);
+      }
+
+      console.error(`Unhandled error type: `, error);
+      throw error;
     }
   }
 }
