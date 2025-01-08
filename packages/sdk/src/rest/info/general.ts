@@ -170,9 +170,8 @@ export class GeneralInfoAPI {
     interval: string,
     startTime: number,
     endTime: number,
-    rawResponse: boolean = false,
-  ): Promise<CandleSnapshot> {
-    const response = await this.httpApi.makeRequest({
+  ): Promise<CandleSnapshot[]> {
+    return this.httpApi.makeRequest<CandleSnapshot[]>({
       type: InfoType.CANDLE_SNAPSHOT,
       req: {
         coin: await this.symbolConversion.convertSymbol(coin, 'reverse'),
@@ -181,9 +180,5 @@ export class GeneralInfoAPI {
         endTime: endTime,
       },
     });
-
-    return rawResponse
-      ? response
-      : await this.symbolConversion.convertResponse(response, ['s']);
   }
 }

@@ -313,18 +313,17 @@ export interface L2Book {
 }
 
 export interface CandleSnapshot {
+  t: number;
   T: number;
+  s: string;
+  i: string;
+  o: string;
   c: string;
   h: string;
-  i: string;
   l: string;
-  n: number;
-  o: string;
-  s: string;
-  t: number;
   v: string;
+  n: number;
 }
-[];
 
 // Perps assets context
 export interface AssetCtx {

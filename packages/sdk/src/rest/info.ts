@@ -123,14 +123,12 @@ export class InfoAPI {
     interval: string,
     startTime: number,
     endTime: number,
-    rawResponse: boolean = false,
-  ): Promise<CandleSnapshot> {
+  ): Promise<CandleSnapshot[]> {
     return this.generalAPI.getCandleSnapshot(
       coin,
       interval,
       startTime,
       endTime,
-      rawResponse,
     );
   }
 }
