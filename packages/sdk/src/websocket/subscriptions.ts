@@ -1,17 +1,16 @@
 import { WebSocketClient } from './connection';
 import {
   AllMids,
-  WsTrade,
   WsBook,
   WsOrder,
   WsUserEvent,
   Notification,
   WebData2,
-  Candle,
   WsUserFills,
   WsUserFundings,
   WsUserNonFundingLedgerUpdates,
   WsUserActiveAssetData,
+  CandleSnapshot,
 } from '../types/index';
 import { SymbolConversion } from '../utils/symbolConversion';
 
@@ -115,7 +114,7 @@ export class WebSocketSubscriptions {
   async subscribeToCandle(
     coin: string,
     interval: string,
-    callback: (data: Candle[] & { coin: string; interval: string }) => void,
+    callback: (data: CandleSnapshot[]) => void,
   ): Promise<void> {
     const convertedCoin = await this.symbolConversion.convertSymbol(
       coin,
@@ -128,9 +127,6 @@ export class WebSocketSubscriptions {
         message.data.s === convertedCoin &&
         message.data.i === interval
       ) {
-        message = await this.symbolConversion.convertSymbolsInObject(message, [
-          's',
-        ]);
         callback(message.data);
       }
     });

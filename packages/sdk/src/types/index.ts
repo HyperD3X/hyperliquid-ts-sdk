@@ -500,21 +500,6 @@ export interface WebData2 extends MetaAndAssetCtxs {
   isVault: boolean;
 }
 
-export interface Candle {
-  t: number; // open time
-  T: number; // close time
-  s: string; // symbol
-  i: string; // interval
-  o: string; // open
-  c: string; // close
-  h: string; // high
-  l: string; // low
-  v: string; // volume
-  n: number; // number of trades
-  coin: string;
-  interval: string;
-}
-
 export interface WsUserFill {
   coin: string;
   px: string;
