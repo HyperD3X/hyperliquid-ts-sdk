@@ -114,7 +114,7 @@ export class WebSocketSubscriptions {
   async subscribeToCandle(
     coin: string,
     interval: string,
-    callback: (data: CandleSnapshot[]) => void,
+    callback: (data: CandleSnapshot) => void,
   ): Promise<void> {
     const convertedCoin = await this.symbolConversion.convertSymbol(
       coin,
