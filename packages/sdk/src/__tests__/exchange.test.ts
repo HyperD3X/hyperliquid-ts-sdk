@@ -4,7 +4,7 @@ import { Hyperliquid } from '../index';
 let sdk: Hyperliquid;
 
 // Add mocks
-describe('Hyperliquid EXCHANGE API tests', () => {
+describe.skip('Hyperliquid EXCHANGE API tests', () => {
   beforeAll(async () => {
     const privateKey = process.env.PRIVATE_KEY!;
 

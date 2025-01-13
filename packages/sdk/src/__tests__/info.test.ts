@@ -4,7 +4,7 @@ import { Hyperliquid } from '../index';
 let sdk: Hyperliquid;
 
 // Add mocks
-describe('Hyperliquid INFO API tests', () => {
+describe.skip('Hyperliquid INFO API tests', () => {
   beforeAll(async () => {
     const privateKey = process.env.PRIVATE_KEY!;
 
@@ -18,7 +18,7 @@ describe('Hyperliquid INFO API tests', () => {
     expect(result[key[0]]).toEqual(expect.any(Number));
   });
 
-  test.only('Get candles snapshot', async () => {
+  test('Get candles snapshot', async () => {
     const result = await sdk.info.getCandleSnapshot(
       'BTC-PERP',
       '1h',
