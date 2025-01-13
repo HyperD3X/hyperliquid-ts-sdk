@@ -39,7 +39,7 @@ export class WebSocketSubscriptions {
   }): Promise<void> {
     const convertedSubscription =
       await this.symbolConversion.convertSymbolsInObject(subscription);
-    await this.ws.sendMessage({
+    this.ws.sendMessage({
       method: 'unsubscribe',
       subscription: convertedSubscription,
     });
@@ -120,7 +120,13 @@ export class WebSocketSubscriptions {
       coin,
       'reverse',
     );
-    this.subscribe({ type: 'candle', coin: convertedCoin, interval: interval });
+
+    await this.subscribe({
+      type: 'candle',
+      coin: convertedCoin,
+      interval: interval,
+    });
+
     this.ws.on('message', async (message: any) => {
       if (
         message.channel === 'candle' &&

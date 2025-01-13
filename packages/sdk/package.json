@@ -1,6 +1,6 @@
 {
   "name": "hyperliquid-sdk",
-  "version": "1.7.2",
+  "version": "1.7.3",
   "description": "<<< Typescript SDK for the Hyperliquid API >>>",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -17,7 +17,6 @@
   "keywords": [
     "hyperliquid",
     "typescript",
-    "sdk",
     "api",
     "sdk",
     "dex",
@@ -38,8 +37,6 @@
     "jest": "^29.7.0",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
-    "tsup": "^8.3.5",
-    "webpack": "^5.97.1",
-    "webpack-cli": "^5.1.4"
+    "tsup": "^8.3.5"
   }
 }
