@@ -1,5 +1,6 @@
 import { beforeAll, describe } from '@jest/globals';
 import { Hyperliquid } from '../index';
+import { Wallet } from 'ethers';
 
 let sdk: Hyperliquid;
 
@@ -8,7 +9,7 @@ describe.skip('Hyperliquid EXCHANGE API tests', () => {
   beforeAll(async () => {
     const privateKey = process.env.PRIVATE_KEY!;
 
-    sdk = new Hyperliquid(privateKey);
+    sdk = new Hyperliquid(new Wallet(privateKey));
   });
 
   test('Place Order', async () => {

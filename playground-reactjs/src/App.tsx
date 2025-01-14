@@ -8,7 +8,7 @@ import {
 } from 'hyperliquid-sdk';
 import { ethers } from 'ethers';
 
-let sdk = new Hyperliquid('');
+let sdk = new Hyperliquid();
 
 type PriceView = { coin: string; price: string };
 
@@ -34,10 +34,11 @@ function App() {
       return;
     }
 
-    sdk = new Hyperliquid(privateKey);
+    const localWallet = new ethers.Wallet(privateKey);
 
-    const localWallet = await new ethers.Wallet(privateKey).getAddress();
-    setPublicKey(localWallet);
+    sdk = new Hyperliquid(localWallet);
+
+    setPublicKey(await localWallet.getAddress());
   };
 
   useEffect(() => {

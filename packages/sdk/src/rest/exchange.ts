@@ -1,4 +1,4 @@
-import { ethers } from 'ethers';
+import { BaseWallet } from 'ethers';
 import { RateLimiter } from '../utils/rateLimiter';
 import { HttpApi } from '../utils/helpers';
 import { InfoAPI } from './info';
@@ -28,28 +28,25 @@ import { SymbolConversion } from '../utils/symbolConversion';
 // const IS_MAINNET = true; // Make sure this matches the IS_MAINNET in signing.ts
 
 export class ExchangeAPI {
-  private wallet: ethers.Wallet;
+  private wallet: BaseWallet;
   private httpApi: HttpApi;
   private symbolConversion: SymbolConversion;
   private IS_MAINNET = true;
-  private walletAddress: string | null;
 
   constructor(
     testnet: boolean,
-    privateKey: string,
+    wallet: BaseWallet,
     private info: InfoAPI,
     rateLimiter: RateLimiter,
     symbolConversion: SymbolConversion,
-    walletAddress: string | null = null,
   ) {
     const baseURL = testnet
       ? CONSTANTS.BASE_URLS.TESTNET
       : CONSTANTS.BASE_URLS.PRODUCTION;
     this.IS_MAINNET = !testnet;
     this.httpApi = new HttpApi(baseURL, ENDPOINTS.EXCHANGE, rateLimiter);
-    this.wallet = new ethers.Wallet(privateKey);
+    this.wallet = wallet;
     this.symbolConversion = symbolConversion;
-    this.walletAddress = walletAddress;
   }
 
   private async getAssetIndex(symbol: string): Promise<number> {
@@ -333,11 +330,7 @@ export class ExchangeAPI {
       );
 
       const payload = { action, nonce: action.time, signature };
-      return this.httpApi.makeRequest(
-        payload,
-        1,
-        // this.walletAddress || this.wallet.address, // TODO: Add another client for this API
-      );
+      return this.httpApi.makeRequest(payload, 1);
     } catch (error) {
       throw error;
     }

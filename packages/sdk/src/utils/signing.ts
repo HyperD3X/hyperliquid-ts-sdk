@@ -1,5 +1,5 @@
 import { encode } from '@msgpack/msgpack';
-import { ethers, getBytes, HDNodeWallet, keccak256, type Wallet } from 'ethers';
+import { BaseWallet, ethers, getBytes, keccak256 } from 'ethers';
 
 import type {
   Builder,
@@ -69,7 +69,7 @@ function constructPhantomAgent(hash: string, isMainnet: boolean) {
 }
 
 export async function signL1Action(
-  wallet: Wallet | HDNodeWallet,
+  wallet: BaseWallet,
   action: unknown,
   activePool: string | null,
   nonce: number,
@@ -87,7 +87,7 @@ export async function signL1Action(
 }
 
 export async function signUserSignedAction(
-  wallet: Wallet,
+  wallet: BaseWallet,
   action: any,
   payloadTypes: Array<{ name: string; type: string }>,
   primaryType: string,
@@ -112,7 +112,7 @@ export async function signUserSignedAction(
 }
 
 export async function signUsdTransferAction(
-  wallet: Wallet,
+  wallet: BaseWallet,
   action: any,
   isMainnet: boolean,
 ): Promise<Signature> {
@@ -131,7 +131,7 @@ export async function signUsdTransferAction(
 }
 
 export async function signWithdrawFromBridgeAction(
-  wallet: Wallet,
+  wallet: BaseWallet,
   action: any,
   isMainnet: boolean,
 ): Promise<Signature> {
@@ -150,7 +150,7 @@ export async function signWithdrawFromBridgeAction(
 }
 
 export async function signAgent(
-  wallet: Wallet,
+  wallet: BaseWallet,
   action: any,
   isMainnet: boolean,
 ): Promise<Signature> {
@@ -168,10 +168,7 @@ export async function signAgent(
   );
 }
 
-async function signInner(
-  wallet: Wallet | HDNodeWallet,
-  data: any,
-): Promise<Signature> {
+async function signInner(wallet: BaseWallet, data: any): Promise<Signature> {
   const signature = await wallet.signTypedData(
     data.domain,
     data.types,

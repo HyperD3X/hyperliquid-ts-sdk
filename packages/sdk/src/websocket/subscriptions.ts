@@ -27,7 +27,7 @@ export class WebSocketSubscriptions {
     type: string;
     [key: string]: any;
   }): Promise<void> {
-    await this.ws.sendMessage({
+    this.ws.sendMessage({
       method: 'subscribe',
       subscription: subscription,
     });
@@ -266,7 +266,7 @@ export class WebSocketSubscriptions {
     const convertedPayload =
       await this.symbolConversion.convertSymbolsInObject(payload);
 
-    await this.ws.sendMessage({
+    this.ws.sendMessage({
       method: 'post',
       id: id,
       request: {

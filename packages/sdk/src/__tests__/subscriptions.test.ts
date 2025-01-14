@@ -1,6 +1,6 @@
 import { beforeAll, describe } from '@jest/globals';
 import { Hyperliquid } from '../index';
-import { ethers } from 'ethers';
+import { ethers, Wallet } from 'ethers';
 
 let sdk: Hyperliquid;
 let publiKey: string = '';
@@ -9,9 +9,10 @@ let publiKey: string = '';
 describe('Hyperliquid Subscriptions API tests', () => {
   beforeAll(async () => {
     const privateKey = process.env.PRIVATE_KEY!;
-    publiKey = await new ethers.Wallet(privateKey).getAddress();
+    const wallet = new Wallet(privateKey);
+    publiKey = await wallet.getAddress();
 
-    sdk = new Hyperliquid(privateKey);
+    sdk = new Hyperliquid(wallet);
     await sdk.connect();
   });
 

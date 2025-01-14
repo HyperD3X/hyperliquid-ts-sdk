@@ -14,9 +14,9 @@ yarn add hyperliquid-sdk
 ```typescript
 import { Hyperliquid } from 'hyperliquid-sdk';
 
-const privateKey = <YOUR_PRIVATE_KEY>;
+const wallet = new ethers.Wallet(<YOUR_PRIVATE_KEY>); // or any other BaseWallet compatible
 
-const sdk = new Hyperliquid(privateKey);
+const sdk = new Hyperliquid(wallet);
 
 await sdk.info.getAllMids();
 ```
