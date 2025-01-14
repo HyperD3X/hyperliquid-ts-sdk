@@ -1,6 +1,6 @@
 // src/rest/custom.ts
 
-import { BaseWallet } from 'ethers';
+import { AbstractSigner } from 'ethers';
 import { InfoAPI } from './info';
 import { ExchangeAPI } from './exchange';
 import {
@@ -19,13 +19,13 @@ import { SymbolConversion } from '../utils/symbolConversion';
 export class CustomOperations {
   private exchange: ExchangeAPI;
   private infoApi: InfoAPI;
-  private wallet: BaseWallet;
+  private wallet: AbstractSigner;
   private symbolConversion: SymbolConversion;
 
   constructor(
     exchange: ExchangeAPI,
     infoApi: InfoAPI,
-    wallet: BaseWallet,
+    wallet: AbstractSigner,
     symbolConversion: SymbolConversion,
   ) {
     this.exchange = exchange;

@@ -1,4 +1,4 @@
-import { BaseWallet } from 'ethers';
+import { AbstractSigner } from 'ethers';
 import { RateLimiter } from '../utils/rateLimiter';
 import { HttpApi } from '../utils/helpers';
 import { InfoAPI } from './info';
@@ -28,14 +28,14 @@ import { SymbolConversion } from '../utils/symbolConversion';
 // const IS_MAINNET = true; // Make sure this matches the IS_MAINNET in signing.ts
 
 export class ExchangeAPI {
-  private wallet: BaseWallet;
+  private wallet: AbstractSigner;
   private httpApi: HttpApi;
   private symbolConversion: SymbolConversion;
   private IS_MAINNET = true;
 
   constructor(
     testnet: boolean,
-    wallet: BaseWallet,
+    wallet: AbstractSigner,
     private info: InfoAPI,
     rateLimiter: RateLimiter,
     symbolConversion: SymbolConversion,

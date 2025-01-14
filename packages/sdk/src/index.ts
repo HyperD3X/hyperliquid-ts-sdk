@@ -5,7 +5,7 @@ import { WebSocketSubscriptions } from './websocket/subscriptions';
 import { RateLimiter } from './utils/rateLimiter';
 import * as CONSTANTS from './types/constants';
 import { CustomOperations } from './rest/custom';
-import { BaseWallet } from 'ethers';
+import { AbstractSigner } from 'ethers';
 import { SymbolConversion } from './utils/symbolConversion';
 import { AuthenticationError } from './utils/errors';
 
@@ -19,9 +19,9 @@ export class Hyperliquid {
   private rateLimiter: RateLimiter;
   private symbolConversion: SymbolConversion;
   private isValidWallet: boolean = false;
-  private wallet: BaseWallet | null = null;
+  private wallet: AbstractSigner | null = null;
 
-  constructor(wallet?: BaseWallet, testnet: boolean = false) {
+  constructor(wallet?: AbstractSigner, testnet: boolean = false) {
     const baseURL = testnet
       ? CONSTANTS.BASE_URLS.TESTNET
       : CONSTANTS.BASE_URLS.PRODUCTION;
@@ -62,7 +62,7 @@ export class Hyperliquid {
   }
 
   private initializeWithWallet(
-    wallet: BaseWallet,
+    wallet: AbstractSigner,
     testnet: boolean = false,
   ): void {
     try {
