@@ -64,7 +64,7 @@ export class ExchangeAPI {
 
   async placeOrder(
     orderRequest: OrderRequest,
-  ): Promise<ApiResponseWithStatus<OrderResponse>> {
+  ): Promise<ApiResponseWithStatus<OrderResponse | string>> {
     const {
       orders,
       vaultAddress = null,
@@ -101,7 +101,7 @@ export class ExchangeAPI {
       const payload = { action: actions, nonce, signature, vaultAddress };
 
       const result = await this.httpApi.makeRequest<
-        ApiResponseWithStatus<OrderResponse>
+        ApiResponseWithStatus<OrderResponse | string>
       >(payload, 1);
 
       return this.validateErrorResult(result);
@@ -111,8 +111,8 @@ export class ExchangeAPI {
   }
 
   private validateErrorResult(
-    result: ApiResponseWithStatus<OrderResponse>,
-  ): ApiResponseWithStatus<OrderResponse> {
+    result: ApiResponseWithStatus<OrderResponse | string>,
+  ): ApiResponseWithStatus<OrderResponse | string> {
     if (typeof result.response !== 'string') {
       const status = result.response.data.statuses.find(
         (status) => !!status.error,
@@ -408,7 +408,11 @@ export class ExchangeAPI {
       );
 
       const payload = { action, nonce: action.time, signature };
-      return this.httpApi.makeRequest(payload, 1);
+      const result = await this.httpApi.makeRequest<
+        ApiResponseWithStatus<CommonSuccessOrErrorResponse | string>
+      >(payload, 1);
+
+      return this.validateErrorResult(result);
     } catch (error) {
       throw error;
     }
@@ -418,7 +422,7 @@ export class ExchangeAPI {
   async transferBetweenSpotAndPerp(
     usdc: number,
     toPerp: boolean,
-  ): Promise<ApiResponseWithStatus<{ type: 'default' } | string>> {
+  ): Promise<ApiResponseWithStatus<CommonSuccessOrErrorResponse | string>> {
     try {
       const action = {
         type: ExchangeType.USD_CLASS_TRANSFER,
@@ -444,9 +448,11 @@ export class ExchangeAPI {
 
       const payload = { action, nonce: action.nonce, signature };
 
-      return this.httpApi.makeRequest<
-        ApiResponseWithStatus<{ type: 'default' } | string>
+      const result = await this.httpApi.makeRequest<
+        ApiResponseWithStatus<CommonSuccessOrErrorResponse | string>
       >(payload, 1);
+
+      return this.validateErrorResult(result);
     } catch (error) {
       throw error;
     }
