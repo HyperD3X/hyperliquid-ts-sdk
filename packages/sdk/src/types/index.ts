@@ -291,7 +291,7 @@ export interface UserFills {
 
 export type UserStatistic = {
   accountValueHistory: Array<Array<number | string>>;
-  pnlHistory: Array<number | string>;
+  pnlHistory: Array<Array<number | string>>;
   vlm: string;
 };
 
