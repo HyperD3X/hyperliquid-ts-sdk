@@ -56,3 +56,18 @@ export const WEBSOCKET = {
   MAINNET_URL: 'wss://api.hyperliquid.xyz/ws',
   TESTNET_URL: 'wss://api.hyperliquid-testnet.xyz/ws',
 };
+
+export const ARBITRUM_CHAIN_ID_DECIMAL = {
+  MAINNET: 42161,
+  TESTNET: 421614,
+};
+
+export const ARBITRUM_CHAIN_ID_HEX = {
+  MAINNET: '0xa4b1',
+  TESTNET: '0x66eee',
+};
+
+export const HYPERLIQUID_CHAIN_NAME = {
+  MAINNET: 'Mainnet',
+  TESTNET: 'Testnet',
+};

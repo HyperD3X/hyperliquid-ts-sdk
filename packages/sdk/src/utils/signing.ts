@@ -10,6 +10,11 @@ import type {
   CancelOrderRequest,
   Grouping,
 } from '../types';
+import {
+  ARBITRUM_CHAIN_ID_DECIMAL,
+  ARBITRUM_CHAIN_ID_HEX,
+  HYPERLIQUID_CHAIN_NAME,
+} from '../types/constants';
 
 const phantomDomain = {
   name: 'Exchange',
@@ -93,13 +98,19 @@ export async function signUserSignedAction(
   primaryType: string,
   isMainnet: boolean,
 ): Promise<Signature> {
-  action.signatureChainId = '0x66eee';
-  action.hyperliquidChain = isMainnet ? 'Mainnet' : 'Testnet';
+  action.signatureChainId = isMainnet
+    ? ARBITRUM_CHAIN_ID_HEX.MAINNET
+    : ARBITRUM_CHAIN_ID_HEX.TESTNET;
+  action.hyperliquidChain = isMainnet
+    ? HYPERLIQUID_CHAIN_NAME.MAINNET
+    : HYPERLIQUID_CHAIN_NAME.TESTNET;
   const data = {
     domain: {
       name: 'HyperliquidSignTransaction',
       version: '1',
-      chainId: 421614,
+      chainId: isMainnet
+        ? ARBITRUM_CHAIN_ID_DECIMAL.MAINNET
+        : ARBITRUM_CHAIN_ID_DECIMAL.TESTNET,
       verifyingContract: '0x0000000000000000000000000000000000000000',
     },
     types: {

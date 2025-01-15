@@ -22,7 +22,12 @@ import {
   ApiResponseWithStatus,
 } from '../types/index';
 
-import { ExchangeType, ENDPOINTS } from '../types/constants';
+import {
+  ExchangeType,
+  ENDPOINTS,
+  ARBITRUM_CHAIN_ID_HEX,
+  HYPERLIQUID_CHAIN_NAME,
+} from '../types/constants';
 import { SymbolConversion } from '../utils/symbolConversion';
 
 // const IS_MAINNET = true; // Make sure this matches the IS_MAINNET in signing.ts
@@ -31,7 +36,7 @@ export class ExchangeAPI {
   private wallet: AbstractSigner;
   private httpApi: HttpApi;
   private symbolConversion: SymbolConversion;
-  private IS_MAINNET = true;
+  private isMainnet = true;
 
   constructor(
     testnet: boolean,
@@ -43,7 +48,7 @@ export class ExchangeAPI {
     const baseURL = testnet
       ? CONSTANTS.BASE_URLS.TESTNET
       : CONSTANTS.BASE_URLS.PRODUCTION;
-    this.IS_MAINNET = !testnet;
+    this.isMainnet = !testnet;
     this.httpApi = new HttpApi(baseURL, ENDPOINTS.EXCHANGE, rateLimiter);
     this.wallet = wallet;
     this.symbolConversion = symbolConversion;
@@ -90,7 +95,7 @@ export class ExchangeAPI {
         actions,
         vaultAddress,
         nonce,
-        this.IS_MAINNET,
+        this.isMainnet,
       );
 
       const payload = { action: actions, nonce, signature, vaultAddress };
@@ -152,7 +157,7 @@ export class ExchangeAPI {
         action,
         null,
         nonce,
-        this.IS_MAINNET,
+        this.isMainnet,
       );
 
       const payload = { action, nonce, signature };
@@ -178,7 +183,7 @@ export class ExchangeAPI {
         action,
         null,
         nonce,
-        this.IS_MAINNET,
+        this.isMainnet,
       );
 
       const payload = { action, nonce, signature };
@@ -205,7 +210,7 @@ export class ExchangeAPI {
         action,
         null,
         nonce,
-        this.IS_MAINNET,
+        this.isMainnet,
       );
 
       const payload = { action, nonce, signature };
@@ -241,7 +246,7 @@ export class ExchangeAPI {
         action,
         null,
         nonce,
-        this.IS_MAINNET,
+        this.isMainnet,
       );
 
       const payload = { action, nonce, signature };
@@ -270,7 +275,7 @@ export class ExchangeAPI {
         action,
         null,
         nonce,
-        this.IS_MAINNET,
+        this.isMainnet,
       );
 
       const payload = { action, nonce, signature };
@@ -302,7 +307,7 @@ export class ExchangeAPI {
         action,
         null,
         nonce,
-        this.IS_MAINNET,
+        this.isMainnet,
       );
 
       const payload = { action, nonce, signature };
@@ -312,13 +317,19 @@ export class ExchangeAPI {
     }
   }
 
+  private getChainIdHex(): string {
+    return this.isMainnet
+      ? ARBITRUM_CHAIN_ID_HEX.MAINNET
+      : ARBITRUM_CHAIN_ID_HEX.TESTNET;
+  }
+
   //Takes from the perps wallet and sends to another wallet without the $1 fee (doesn't touch bridge, so no fees)
   async usdTransfer(destination: string, amount: number): Promise<any> {
     try {
       const action = {
         type: ExchangeType.USD_SEND,
-        hyperliquidChain: this.IS_MAINNET ? 'Mainnet' : 'Testnet',
-        signatureChainId: '0xa4b1',
+        hyperliquidChain: this.getHyperliquidChainName(),
+        signatureChainId: this.getChainIdHex(),
         destination: destination,
         amount: amount.toString(),
         time: Date.now(),
@@ -326,7 +337,7 @@ export class ExchangeAPI {
       const signature = await signUsdTransferAction(
         this.wallet,
         action,
-        this.IS_MAINNET,
+        this.isMainnet,
       );
 
       const payload = { action, nonce: action.time, signature };
@@ -345,8 +356,8 @@ export class ExchangeAPI {
     try {
       const action = {
         type: ExchangeType.SPOT_SEND,
-        hyperliquidChain: this.IS_MAINNET ? 'Mainnet' : 'Testnet',
-        signatureChainId: '0xa4b1',
+        hyperliquidChain: this.getHyperliquidChainName(),
+        signatureChainId: this.getChainIdHex(),
         destination,
         token,
         amount,
@@ -363,7 +374,7 @@ export class ExchangeAPI {
           { name: 'time', type: 'uint64' },
         ],
         'HyperliquidTransaction:SpotSend',
-        this.IS_MAINNET,
+        this.isMainnet,
       );
 
       const payload = { action, nonce: action.time, signature };
@@ -373,13 +384,19 @@ export class ExchangeAPI {
     }
   }
 
+  private getHyperliquidChainName() {
+    return this.isMainnet
+      ? HYPERLIQUID_CHAIN_NAME.MAINNET
+      : HYPERLIQUID_CHAIN_NAME.TESTNET;
+  }
+
   //Withdraw USDC, this txn goes across the bridge and costs $1 in fees as of writing this
   async initiateWithdrawal(destination: string, amount: number): Promise<any> {
     try {
       const action = {
         type: ExchangeType.WITHDRAW,
-        hyperliquidChain: this.IS_MAINNET ? 'Mainnet' : 'Testnet',
-        signatureChainId: '0xa4b1',
+        hyperliquidChain: this.getHyperliquidChainName(),
+        signatureChainId: this.getChainIdHex(),
         destination: destination,
         amount: amount.toString(),
         time: Date.now(),
@@ -387,7 +404,7 @@ export class ExchangeAPI {
       const signature = await signWithdrawFromBridgeAction(
         this.wallet,
         action,
-        this.IS_MAINNET,
+        this.isMainnet,
       );
 
       const payload = { action, nonce: action.time, signature };
@@ -405,8 +422,8 @@ export class ExchangeAPI {
     try {
       const action = {
         type: ExchangeType.USD_CLASS_TRANSFER,
-        hyperliquidChain: this.IS_MAINNET ? 'Mainnet' : 'Testnet',
-        signatureChainId: '0xa4b1',
+        hyperliquidChain: this.getHyperliquidChainName(),
+        signatureChainId: this.getChainIdHex(),
         amount: usdc.toString(),
         toPerp: toPerp,
         nonce: Date.now(),
@@ -422,7 +439,7 @@ export class ExchangeAPI {
           { name: 'nonce', type: 'uint64' },
         ],
         'HyperliquidTransaction:UsdClassTransfer',
-        this.IS_MAINNET,
+        this.isMainnet,
       );
 
       const payload = { action, nonce: action.nonce, signature };
@@ -445,7 +462,7 @@ export class ExchangeAPI {
         action,
         null,
         nonce,
-        this.IS_MAINNET,
+        this.isMainnet,
       );
 
       const payload = { action, nonce, signature };
@@ -474,7 +491,7 @@ export class ExchangeAPI {
         action,
         null,
         nonce,
-        this.IS_MAINNET,
+        this.isMainnet,
       );
 
       const payload = { action, nonce, signature };
@@ -496,7 +513,7 @@ export class ExchangeAPI {
         action,
         null,
         nonce,
-        this.IS_MAINNET,
+        this.isMainnet,
       );
 
       const payload = { action, nonce, signature };
