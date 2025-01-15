@@ -3,14 +3,14 @@ import { Hyperliquid } from '../index';
 import { ethers, Wallet } from 'ethers';
 
 let sdk: Hyperliquid;
-let publiKey: string = '';
+let publicKey: string = '';
 
 // Add mocks
 describe('Hyperliquid Subscriptions API tests', () => {
   beforeAll(async () => {
     const privateKey = process.env.PRIVATE_KEY!;
     const wallet = new Wallet(privateKey);
-    publiKey = await wallet.getAddress();
+    publicKey = await wallet.getAddress();
 
     sdk = new Hyperliquid(wallet);
     await sdk.connect();
@@ -18,7 +18,7 @@ describe('Hyperliquid Subscriptions API tests', () => {
 
   test('subscribed to spots stream', () => {
     return new Promise<void>((res) => {
-      return sdk.subscriptions.subscribeToWebData2(publiKey, async (data) => {
+      return sdk.subscriptions.subscribeToWebData2(publicKey, async (data) => {
         expect(
           data.spotAssetCtxs.find((item) => item.coin === 'HYPE-SPOT'),
         ).toEqual({

@@ -289,6 +289,42 @@ export interface UserFills {
 }
 [];
 
+export type UserFees = {
+  activeReferralDiscount: string;
+  dailyUserVlm: [
+    {
+      date: string;
+      exchange: string;
+      userAdd: string;
+      userCross: string;
+    },
+  ];
+  feeSchedule: {
+    add: string;
+    cross: string;
+    referralDiscount: string;
+    tiers: {
+      mm: [
+        {
+          add: string;
+          makerFractionCutoff: string;
+        },
+      ];
+      vip: [
+        {
+          add: string;
+          cross: string;
+          ntlCutoff: string;
+        },
+      ];
+    };
+  };
+  userAddRate: string;
+  userCrossRate: string;
+  feeTrialReward: string;
+  nextTrialAvailableTimestamp: number | null;
+};
+
 export interface UserRateLimit {
   [key: string]: any;
 }

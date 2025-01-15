@@ -10,6 +10,7 @@ import {
   L2Book,
   CandleSnapshot,
   ReferralStateResponse,
+  UserFees,
 } from '../../types';
 import { HttpApi, validatePublicKey } from '../../utils/helpers';
 import { SymbolConversion } from '../../utils/symbolConversion';
@@ -153,6 +154,15 @@ export class GeneralInfoAPI {
     return rawResponse
       ? response
       : await this.symbolConversion.convertResponse(response);
+  }
+
+  async getUserFees(userPublicKey: string): Promise<UserFees> {
+    validatePublicKey(userPublicKey);
+
+    return this.httpApi.makeRequest<UserFees>({
+      type: InfoType.USER_FEES,
+      user: userPublicKey,
+    });
   }
 
   async getL2Book(coin: string, rawResponse: boolean = false): Promise<L2Book> {

@@ -3,13 +3,16 @@ import { Hyperliquid } from '../index';
 import { Wallet } from 'ethers';
 
 let sdk: Hyperliquid;
+let publicKey: string;
 
 // Add mocks
 describe('Hyperliquid INFO API tests', () => {
   beforeAll(async () => {
     const privateKey = process.env.PRIVATE_KEY!;
+    const wallet = new Wallet(privateKey);
+    publicKey = await wallet.getAddress();
 
-    sdk = new Hyperliquid(new Wallet(privateKey));
+    sdk = new Hyperliquid(wallet);
   });
 
   test('Get All Mids', async () => {
@@ -39,5 +42,14 @@ describe('Hyperliquid INFO API tests', () => {
       v: expect.any(String),
       n: expect.any(Number),
     });
+  });
+
+  test('Get user fees', async () => {
+    const result = await sdk.info.getUserFees(publicKey);
+
+    expect(result.activeReferralDiscount).toEqual(expect.any(String));
+    expect(result.feeTrialReward).toEqual(expect.any(String));
+    expect(result.userCrossRate).toEqual(expect.any(String));
+    expect(result.userAddRate).toEqual(expect.any(String));
   });
 });
