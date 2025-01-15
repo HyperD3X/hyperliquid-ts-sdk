@@ -16,6 +16,7 @@ import {
   CandleSnapshot,
   ReferralStateResponse,
   UserFees,
+  UserPortfolio,
 } from '../types/index';
 
 import { InfoType, ENDPOINTS } from '../types/constants';
@@ -117,6 +118,10 @@ export class InfoAPI {
 
   async getUserFees(userPublicKey: string): Promise<UserFees> {
     return this.generalAPI.getUserFees(userPublicKey);
+  }
+
+  async getUserPortfolio(userPublicKey: string): Promise<UserPortfolio> {
+    return this.generalAPI.getUserPortfolio(userPublicKey);
   }
 
   async getL2Book(coin: string, rawResponse: boolean = false): Promise<L2Book> {

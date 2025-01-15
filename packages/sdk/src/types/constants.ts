@@ -34,6 +34,7 @@ export enum InfoType {
   SPOT_CLEARINGHOUSE_STATE = 'spotClearinghouseState',
   SPOT_META_AND_ASSET_CTXS = 'spotMetaAndAssetCtxs',
   USER_FEES = 'userFees',
+  PORTFOLIO = 'portfolio',
 }
 
 export enum ExchangeType {

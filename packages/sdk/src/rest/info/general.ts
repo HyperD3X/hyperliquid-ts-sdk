@@ -11,6 +11,7 @@ import {
   CandleSnapshot,
   ReferralStateResponse,
   UserFees,
+  UserPortfolio,
 } from '../../types';
 import { HttpApi, validatePublicKey } from '../../utils/helpers';
 import { SymbolConversion } from '../../utils/symbolConversion';
@@ -161,6 +162,15 @@ export class GeneralInfoAPI {
 
     return this.httpApi.makeRequest<UserFees>({
       type: InfoType.USER_FEES,
+      user: userPublicKey,
+    });
+  }
+
+  async getUserPortfolio(userPublicKey: string): Promise<UserPortfolio> {
+    validatePublicKey(userPublicKey);
+
+    return this.httpApi.makeRequest<UserPortfolio>({
+      type: InfoType.PORTFOLIO,
       user: userPublicKey,
     });
   }

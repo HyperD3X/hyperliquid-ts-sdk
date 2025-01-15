@@ -289,6 +289,14 @@ export interface UserFills {
 }
 [];
 
+export type UserStatistic = {
+  accountValueHistory: Array<Array<number | string>>;
+  pnlHistory: Array<number | string>;
+  vlm: string;
+};
+
+export type UserPortfolio = Array<Array<string | UserStatistic>>;
+
 export type UserFees = {
   activeReferralDiscount: string;
   dailyUserVlm: [

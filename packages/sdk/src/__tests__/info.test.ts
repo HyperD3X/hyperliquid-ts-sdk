@@ -52,4 +52,19 @@ describe('Hyperliquid INFO API tests', () => {
     expect(result.userCrossRate).toEqual(expect.any(String));
     expect(result.userAddRate).toEqual(expect.any(String));
   });
+
+  test('Get user portfolio', async () => {
+    const result = await sdk.info.getUserPortfolio(publicKey);
+
+    expect(result[0][0]).toEqual('day');
+
+    if (typeof result[0][1] !== 'string') {
+      expect(result[0][1].accountValueHistory[0][0]).toEqual(
+        expect.any(Number),
+      );
+      expect(result[0][1].accountValueHistory[0][1]).toEqual(
+        expect.any(String),
+      );
+    }
+  });
 });

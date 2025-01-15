@@ -134,78 +134,92 @@ function App() {
     console.log(await sdk.exchange.transferBetweenSpotAndPerp(1, true));
   };
 
-  return (
-    <>
-      <h1>Playground</h1>
-      <h4>Tokens:</h4>
-      {prices && (
-        <>
-          <div>Coins:</div>
-          <div
-            style={{
-              height: '300px',
-              overflow: 'hidden',
-              overflowY: 'scroll',
-              border: '1px solid grey',
-            }}
-          >
-            <table>
-              <thead>
-                <tr>
-                  <th>Coin</th>
-                  <th>Price</th>
-                </tr>
-              </thead>
-              <tbody>
-                {prices.map((priceObj) => (
-                  <tr key={`row-${priceObj.coin}`}>
-                    <td key={`coin-${priceObj.coin}`}>{priceObj.coin}</td>
-                    <td key={`price-$${priceObj.coin}`}>${priceObj.price}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </>
-      )}
-      <h4>Wallet</h4>
-      <div>
-        <div>Your private key:</div>
-        <input onChange={onPrivateKeyChange} value={privateKey} />
-      </div>
-      {publicKey && <div>Your public key: {publicKey}</div>}
-      <h4>Purchase:</h4>
-      <button onClick={buySpot}>Buy spot (PURR for $0.01)</button>
-      <button onClick={buyPerp}>Buy perp (HYPE for $0.01)</button>
-      <h4>Positions:</h4>
-      {spotBalances &&
-        spotBalances.balances.map((balance, index) => (
-          <div key={index}>
-            {balance.coin} {balance.hold} {balance.total}
-          </div>
-        ))}
-      {perpBalances &&
-        perpBalances.assetPositions.map((position, index) => (
-          <div key={index}>
-            {position.position.coin}&nbsp; Size: {position.position.szi}&nbsp;
-            Entry price: ${position.position.entryPx}&nbsp; Value:{' '}
-            {position.position.positionValue}&nbsp; Margin: $
-            {position.position.marginUsed}&nbsp; PnL: $
-            {position.position.unrealizedPnl}&nbsp;
-          </div>
-        ))}
-      <div>
-        <button onClick={onPositionsRefresh}>Refresh positions</button>
-      </div>
-      <div>
-        <button onClick={onAutoRefresh}>Enable real-time updates</button>
-      </div>
-      <div>
-        <button onClick={onSpotToPerp}>Spot to Perp transfer</button>
-      </div>
+  const onUserFees = async () => {
+    console.log(await sdk.info.getUserFees(publicKey!));
+  };
 
-      <div style={{ color: 'red' }}>{error && error}</div>
-    </>
+  const onUserPortfolio = async () => {
+    console.log(await sdk.info.getUserPortfolio(publicKey!));
+  };
+
+  return (
+      <>
+        <h1>Playground</h1>
+        <h4>Tokens:</h4>
+        {prices && (
+            <>
+              <div>Coins:</div>
+              <div
+                  style={{
+                    height: '300px',
+                    overflow: 'hidden',
+                    overflowY: 'scroll',
+                    border: '1px solid grey',
+                  }}
+              >
+                <table>
+                  <thead>
+                  <tr>
+                    <th>Coin</th>
+                    <th>Price</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {prices.map((priceObj) => (
+                      <tr key={`row-${priceObj.coin}`}>
+                        <td key={`coin-${priceObj.coin}`}>{priceObj.coin}</td>
+                        <td key={`price-$${priceObj.coin}`}>${priceObj.price}</td>
+                      </tr>
+                  ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+        )}
+        <h4>Wallet</h4>
+        <div>
+          <div>Your private key:</div>
+          <input onChange={onPrivateKeyChange} value={privateKey}/>
+        </div>
+        {publicKey && <div>Your public key: {publicKey}</div>}
+        <h4>Purchase:</h4>
+        <button onClick={buySpot}>Buy spot (PURR for $0.01)</button>
+        <button onClick={buyPerp}>Buy perp (HYPE for $0.01)</button>
+        <h4>Positions:</h4>
+        {spotBalances &&
+            spotBalances.balances.map((balance, index) => (
+                <div key={index}>
+                  {balance.coin} {balance.hold} {balance.total}
+                </div>
+            ))}
+        {perpBalances &&
+            perpBalances.assetPositions.map((position, index) => (
+                <div key={index}>
+                  {position.position.coin}&nbsp; Size: {position.position.szi}&nbsp;
+                  Entry price: ${position.position.entryPx}&nbsp; Value:{' '}
+                  {position.position.positionValue}&nbsp; Margin: $
+                  {position.position.marginUsed}&nbsp; PnL: $
+                  {position.position.unrealizedPnl}&nbsp;
+                </div>
+            ))}
+        <div>
+          <button onClick={onPositionsRefresh}>Refresh positions</button>
+        </div>
+        <div>
+          <button onClick={onAutoRefresh}>Enable real-time updates</button>
+        </div>
+        <div>
+          <button onClick={onSpotToPerp}>Spot to Perp transfer</button>
+        </div>
+        <div>
+          <button onClick={onUserFees}>Fetch user fees</button>
+        </div>
+        <div>
+          <button onClick={onUserPortfolio}>Fetch user portfolio</button>
+        </div>
+
+        <div style={{color: 'red'}}>{error && error}</div>
+      </>
   );
 }
 
