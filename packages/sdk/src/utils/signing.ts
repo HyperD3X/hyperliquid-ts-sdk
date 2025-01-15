@@ -168,7 +168,10 @@ export async function signAgent(
   );
 }
 
-async function signInner(wallet: AbstractSigner, data: any): Promise<Signature> {
+async function signInner(
+  wallet: AbstractSigner,
+  data: any,
+): Promise<Signature> {
   const signature = await wallet.signTypedData(
     data.domain,
     data.types,

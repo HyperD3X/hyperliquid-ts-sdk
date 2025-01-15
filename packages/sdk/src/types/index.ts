@@ -131,7 +131,7 @@ export interface CommonSuccessOrErrorResponse {
 }
 
 export interface ApiResponseWithStatus<T> {
-  status: string;
+  status: 'ok' | 'err';
   response: T;
 }
 

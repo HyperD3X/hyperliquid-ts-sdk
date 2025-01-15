@@ -401,26 +401,35 @@ export class ExchangeAPI {
   async transferBetweenSpotAndPerp(
     usdc: number,
     toPerp: boolean,
-  ): Promise<any> {
+  ): Promise<ApiResponseWithStatus<{ type: 'default' } | string>> {
     try {
       const action = {
-        type: ExchangeType.SPOT_USER,
-        classTransfer: {
-          usdc: usdc * 1e6,
-          toPerp: toPerp,
-        },
+        type: ExchangeType.USD_CLASS_TRANSFER,
+        hyperliquidChain: this.IS_MAINNET ? 'Mainnet' : 'Testnet',
+        signatureChainId: '0xa4b1',
+        amount: usdc.toString(),
+        toPerp: toPerp,
+        nonce: Date.now(),
       };
-      const nonce = Date.now();
-      const signature = await signL1Action(
+
+      const signature = await signUserSignedAction(
         this.wallet,
         action,
-        null,
-        nonce,
+        [
+          { name: 'hyperliquidChain', type: 'string' },
+          { name: 'amount', type: 'string' },
+          { name: 'toPerp', type: 'bool' },
+          { name: 'nonce', type: 'uint64' },
+        ],
+        'HyperliquidTransaction:UsdClassTransfer',
         this.IS_MAINNET,
       );
 
-      const payload = { action, nonce, signature };
-      return this.httpApi.makeRequest(payload, 1);
+      const payload = { action, nonce: action.nonce, signature };
+
+      return this.httpApi.makeRequest<
+        ApiResponseWithStatus<{ type: 'default' } | string>
+      >(payload, 1);
     } catch (error) {
       throw error;
     }

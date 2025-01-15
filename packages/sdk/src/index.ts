@@ -19,7 +19,6 @@ export class Hyperliquid {
   private rateLimiter: RateLimiter;
   private symbolConversion: SymbolConversion;
   private isValidWallet: boolean = false;
-  private wallet: AbstractSigner | null = null;
 
   constructor(wallet?: AbstractSigner, testnet: boolean = false) {
     const baseURL = testnet
@@ -41,7 +40,6 @@ export class Hyperliquid {
     this.custom = this.createAuthenticatedProxy(CustomOperations);
 
     if (wallet) {
-      this.wallet = wallet;
       this.initializeWithWallet(wallet, testnet);
     }
   }

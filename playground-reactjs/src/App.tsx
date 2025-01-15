@@ -130,6 +130,10 @@ function App() {
     startWebsocket();
   };
 
+  const onSpotToPerp = async () => {
+    console.log(await sdk.exchange.transferBetweenSpotAndPerp(1, true));
+  };
+
   return (
     <>
       <h1>Playground</h1>
@@ -195,6 +199,9 @@ function App() {
       </div>
       <div>
         <button onClick={onAutoRefresh}>Enable real-time updates</button>
+      </div>
+      <div>
+        <button onClick={onSpotToPerp}>Spot to Perp transfer</button>
       </div>
 
       <div style={{ color: 'red' }}>{error && error}</div>
