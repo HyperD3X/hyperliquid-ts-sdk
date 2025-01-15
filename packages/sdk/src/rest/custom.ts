@@ -108,7 +108,7 @@ export class CustomOperations {
     px?: number,
     slippage: number = this.DEFAULT_SLIPPAGE,
     cloid?: string,
-  ): Promise<ApiResponseWithStatus<OrderResponse>> {
+  ): Promise<ApiResponseWithStatus<OrderResponse | string>> {
     const convertedSymbol = await this.symbolConversion.convertSymbol(symbol);
     const slippagePrice = await this.getSlippagePrice(
       convertedSymbol,
@@ -140,7 +140,7 @@ export class CustomOperations {
     px?: number,
     slippage: number = this.DEFAULT_SLIPPAGE,
     cloid?: string,
-  ): Promise<ApiResponseWithStatus<OrderResponse>> {
+  ): Promise<ApiResponseWithStatus<OrderResponse | string>> {
     const convertedSymbol = await this.symbolConversion.convertSymbol(symbol);
     const address = await this.wallet.getAddress();
     const positions =
@@ -184,12 +184,14 @@ export class CustomOperations {
 
   async closeAllPositions(
     slippage: number = this.DEFAULT_SLIPPAGE,
-  ): Promise<ApiResponseWithStatus<OrderResponse>[]> {
+  ): Promise<ApiResponseWithStatus<OrderResponse | string>[]> {
     try {
       const address = await this.wallet.getAddress();
       const positions =
         await this.infoApi.perpetuals.getClearinghouseState(address);
-      const closeOrders: Promise<ApiResponseWithStatus<OrderResponse>>[] = [];
+      const closeOrders: Promise<
+        ApiResponseWithStatus<OrderResponse | string>
+      >[] = [];
 
       console.log(positions);
 
