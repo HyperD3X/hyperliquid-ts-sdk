@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      "hyperliquid-sdk": path.resolve(__dirname, "../packages/sdk/src"),
+      "@hyper-d3x/hyperliquid-ts-sdk": path.resolve(__dirname, "../packages/sdk/src"),
     },
   },
 })

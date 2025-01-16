@@ -1,4 +1,4 @@
-import { Hyperliquid } from 'hyperliquid-sdk';
+import { Hyperliquid } from '@hyper-d3x/hyperliquid-ts-sdk';
 
 const user_address = '0x8998a54320cD3Ec83F1837F7E2A9640e282e6711';
 

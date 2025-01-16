@@ -5,7 +5,7 @@ import {
   Hyperliquid,
   LeverageModeEnum,
   SpotClearinghouseState,
-} from 'hyperliquid-sdk';
+} from '@hyper-d3x/hyperliquid-ts-sdk';
 import { ethers } from 'ethers';
 
 let sdk = new Hyperliquid();

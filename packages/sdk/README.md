@@ -4,15 +4,15 @@ Hyperliquid SDK is a Typescript library for building dApps on top of [Hyperliqui
 ## Installation
 You can install the SDK using npm:
 ```
-npm i -S hyperliquid-sdk
+npm i -S @hyper-d3x/hyperliquid-ts-sdk
 ```
 or yarn:
 ```
-yarn add hyperliquid-sdk
+yarn add @hyper-d3x/hyperliquid-ts-sdk
 ```
 ## Usage
 ```typescript
-import { Hyperliquid } from 'hyperliquid-sdk';
+import { Hyperliquid } from '@hyper-d3x/hyperliquid-ts-sdk';
 
 const wallet = new ethers.Wallet(<YOUR_PRIVATE_KEY>); // or any other BaseWallet compatible
 

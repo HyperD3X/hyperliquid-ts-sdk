@@ -1,5 +1,5 @@
 import { testInfoAPI, testPerpetualsInfoAPI, testSpotInfoAPI } from './tests';
-import { Hyperliquid } from 'hyperliquid-sdk';
+import { Hyperliquid } from '@hyper-d3x/hyperliquid-ts-sdk';
 
 async function main() {
   const walletPrivateKey = '';
