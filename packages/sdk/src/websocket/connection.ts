@@ -1,4 +1,5 @@
 import { EventEmitter } from 'events';
+import { WebSocket } from 'unws';
 
 import * as CONSTANTS from '../types/constants';
 

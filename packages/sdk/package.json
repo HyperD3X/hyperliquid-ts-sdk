@@ -1,6 +1,6 @@
 {
   "name": "@hyper-d3x/hyperliquid-ts-sdk",
-  "version": "2.4.2",
+  "version": "2.5.0",
   "description": "<<< Typescript SDK for the Hyperliquid API >>>",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -29,7 +29,8 @@
     "@types/ws": "^8.5.13",
     "axios": "^1.7.9",
     "ethers": "^6.13.4",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "unws": "^0.2.4"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
