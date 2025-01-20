@@ -51,7 +51,7 @@ describe('Hyperliquid Subscriptions API tests', () => {
             l: expect.any(String),
             n: expect.any(Number),
             o: expect.any(String),
-            s: expect.any(String),
+            s: 'BTC-PERP',
             t: expect.any(Number),
             v: expect.any(String),
           });

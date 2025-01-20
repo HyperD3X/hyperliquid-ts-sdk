@@ -133,6 +133,7 @@ export class WebSocketSubscriptions {
         message.data.s === convertedCoin &&
         message.data.i === interval
       ) {
+        message.data.s = coin;
         callback(message.data);
       }
     });
