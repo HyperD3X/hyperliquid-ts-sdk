@@ -1,5 +1,6 @@
 import { HttpApi } from './helpers';
 import * as CONSTANTS from '../types/constants';
+import { LOG_PREFIX } from '../types/constants';
 
 export class SymbolConversion {
   private assetToIndexMap: Map<string, number> = new Map();
@@ -56,7 +57,7 @@ export class SymbolConversion {
         }
       });
     } catch (error) {
-      console.error('Failed to refresh asset maps:', error);
+      console.error(`${LOG_PREFIX} Failed to refresh asset maps:`, error);
     }
   }
 

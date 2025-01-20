@@ -27,6 +27,7 @@ import {
   ENDPOINTS,
   ARBITRUM_CHAIN_ID_HEX,
   HYPERLIQUID_CHAIN_NAME,
+  LOG_PREFIX,
 } from '../types/constants';
 import { SymbolConversion } from '../utils/symbolConversion';
 
@@ -113,8 +114,14 @@ export class ExchangeAPI {
   private validateErrorResult(
     result: ApiResponseWithStatus<OrderResponse | string>,
   ): ApiResponseWithStatus<OrderResponse | string> {
+    if (result.status === 'ok') {
+      return result;
+    } else {
+      console.log(`${LOG_PREFIX} Validation error: `, result.response);
+    }
+
     if (typeof result.response !== 'string') {
-      const status = result.response.data.statuses.find(
+      const status = result?.response?.data?.statuses?.find(
         (status) => !!status.error,
       );
       if (status) {
@@ -122,7 +129,7 @@ export class ExchangeAPI {
       }
     }
 
-    if (result.status !== 'ok' && typeof result.response === 'string') {
+    if (typeof result.response === 'string') {
       throw new Error(result.response);
     }
 

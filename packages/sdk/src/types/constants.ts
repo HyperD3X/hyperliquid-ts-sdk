@@ -73,3 +73,5 @@ export const HYPERLIQUID_CHAIN_NAME = {
   MAINNET: 'Mainnet',
   TESTNET: 'Testnet',
 };
+
+export const LOG_PREFIX = '[HL SDK]';

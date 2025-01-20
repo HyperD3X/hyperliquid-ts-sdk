@@ -2,6 +2,7 @@ import { EventEmitter } from 'events';
 import { WebSocket } from 'unws';
 
 import * as CONSTANTS from '../types/constants';
+import { LOG_PREFIX } from '../types/constants';
 
 export class WebSocketClient extends EventEmitter {
   private ws: WebSocket | null = null;
@@ -25,7 +26,7 @@ export class WebSocketClient extends EventEmitter {
       this.ws = new WebSocket(this.url);
 
       this.ws.onopen = () => {
-        console.log('WebSocket connected');
+        console.log(`${LOG_PREFIX} WebSocket connected`);
         this.reconnectAttempts = 0;
         this.startPingInterval();
         resolve();
@@ -37,12 +38,12 @@ export class WebSocketClient extends EventEmitter {
       };
 
       this.ws.onerror = (ev: Event) => {
-        console.error('WebSocket error:', ev);
+        console.error(`${LOG_PREFIX} WebSocket error:`, ev);
         reject('Something went wrong!');
       };
 
       this.ws.onclose = () => {
-        console.log('WebSocket disconnected');
+        console.log(`${LOG_PREFIX} WebSocket disconnected`);
         this.stopPingInterval();
         this.reconnect();
       };
@@ -57,12 +58,12 @@ export class WebSocketClient extends EventEmitter {
         this.maxReconnectDelay,
       );
       console.log(
-        `Attempting to reconnect (${this.reconnectAttempts}/${this.maxReconnectAttempts}) in ${delay}ms...`,
+        `${LOG_PREFIX} Attempting to reconnect (${this.reconnectAttempts}/${this.maxReconnectAttempts}) in ${delay}ms...`,
       );
       setTimeout(() => this.connect(), delay);
     } else {
       console.error(
-        'Max reconnection attempts reached. Please reconnect manually.',
+        `${LOG_PREFIX} Max reconnection attempts reached. Please reconnect manually.`,
       );
       this.emit('maxReconnectAttemptsReached');
     }

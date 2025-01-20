@@ -1,6 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
 import { handleApiError, HyperliquidAPIError } from './errors';
 import { RateLimiter } from './rateLimiter';
+import { LOG_PREFIX } from '../types/constants';
 
 export class HttpApi {
   private client: AxiosInstance;
@@ -35,7 +36,7 @@ export class HttpApi {
         throw new HyperliquidAPIError(`Unknown error: ${error.message}`);
       }
 
-      console.error(`Unhandled error type: `, error);
+      console.error(`${LOG_PREFIX} Unhandled error type: `, error);
       throw error;
     }
   }
