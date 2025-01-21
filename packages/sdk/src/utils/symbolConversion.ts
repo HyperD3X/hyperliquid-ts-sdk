@@ -1,8 +1,10 @@
 import { HttpApi } from './helpers';
 import * as CONSTANTS from '../types/constants';
 import { LOG_PREFIX } from '../types/constants';
+import { PerpMetaAndContext, SpotMetaAndContext } from '../types';
 
 export class SymbolConversion {
+  public assetToSizeDecimals: Map<string, number> = new Map();
   private assetToIndexMap: Map<string, number> = new Map();
   private exchangeToInternalNameMap: Map<string, string> = new Map();
   private httpApi: HttpApi;
@@ -23,12 +25,11 @@ export class SymbolConversion {
   private async refreshAssetMaps(): Promise<void> {
     try {
       const [perpMeta, spotMeta] = await Promise.all([
-        // TODO: Fix any
-        this.httpApi.makeRequest<any>({
+        this.httpApi.makeRequest<PerpMetaAndContext>({
           type: CONSTANTS.InfoType.PERPS_META_AND_ASSET_CTXS,
         }),
-        // TODO: Fix any
-        this.httpApi.makeRequest<any>({
+
+        this.httpApi.makeRequest<SpotMetaAndContext>({
           type: CONSTANTS.InfoType.SPOT_META_AND_ASSET_CTXS,
         }),
       ]);
@@ -37,25 +38,33 @@ export class SymbolConversion {
       this.exchangeToInternalNameMap.clear();
 
       // Handle perpetual assets
-      perpMeta[0].universe.forEach((asset: { name: string }, index: number) => {
-        const internalName = `${asset.name}-PERP`;
-        this.assetToIndexMap.set(internalName, index);
-        this.exchangeToInternalNameMap.set(asset.name, internalName);
-      });
+      if (!Array.isArray(perpMeta[0])) {
+        perpMeta[0].universe.forEach(({ name, szDecimals }, index: number) => {
+          const internalName = `${name}-PERP`;
+          this.assetToIndexMap.set(internalName, index);
+          this.exchangeToInternalNameMap.set(name, internalName);
+          this.assetToSizeDecimals.set(internalName, szDecimals);
+        });
+      }
 
-      // Handle spot assets
-      spotMeta[0].tokens.forEach((token: any) => {
-        const universeItem = spotMeta[0].universe.find(
-          (item: any) => item.tokens[0] === token.index,
-        );
-        if (universeItem) {
-          const internalName = `${token.name}-SPOT`;
-          const exchangeName = universeItem.name;
-          const index = universeItem.index;
-          this.assetToIndexMap.set(internalName, 10000 + index);
-          this.exchangeToInternalNameMap.set(exchangeName, internalName);
-        }
-      });
+      if (!Array.isArray(spotMeta[0])) {
+        spotMeta[0].tokens.forEach((token) => {
+          if (!Array.isArray(spotMeta[0])) {
+            const universeItem = spotMeta[0].universe.find(
+              (item: any) => item.tokens[0] === token.index,
+            );
+
+            if (universeItem) {
+              const internalName = `${token.name}-SPOT`;
+              const exchangeName = universeItem.name;
+              const index = universeItem.index;
+              this.assetToIndexMap.set(internalName, 10000 + index);
+              this.exchangeToInternalNameMap.set(exchangeName, internalName);
+              this.assetToSizeDecimals.set(internalName, token.szDecimals);
+            }
+          }
+        });
+      }
     } catch (error) {
       console.error(`${LOG_PREFIX} Failed to refresh asset maps:`, error);
     }

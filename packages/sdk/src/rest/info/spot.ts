@@ -1,7 +1,7 @@
 import {
   SpotMeta,
   SpotClearinghouseState,
-  SpotMetaAndAssetCtxs,
+  SpotMetaAndContext,
 } from '../../types';
 import { HttpApi, validatePublicKey } from '../../utils/helpers';
 import { InfoType } from '../../types/constants';
@@ -50,7 +50,7 @@ export class SpotInfoAPI {
 
   async getSpotMetaAndAssetCtxs(
     rawResponse: boolean = false,
-  ): Promise<SpotMetaAndAssetCtxs> {
+  ): Promise<SpotMetaAndContext> {
     const response = await this.httpApi.makeRequest({
       type: InfoType.SPOT_META_AND_ASSET_CTXS,
     });

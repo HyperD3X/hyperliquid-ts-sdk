@@ -12,6 +12,9 @@ let sdk = new Hyperliquid();
 
 type PriceView = { coin: string; price: string };
 
+const buySpotCoin = 'HYPE-SPOT';
+const buyPerpCoin = 'HYPE-PERP';
+
 function App() {
   const mounted = useRef(false);
   const [prices, setPrices] = useState<PriceView[]>([]);
@@ -85,11 +88,12 @@ function App() {
   const buySpot = async () => {
     resetError();
 
-    const coin = 'PURR-SPOT';
+    const apiResponse = await sdk.custom.marketOpen(buySpotCoin, true, 0.5);
 
-    const apiResponse = await sdk.custom.marketOpen(coin, true, 1);
-
-    if (apiResponse.response.data.statuses.find((status) => !!status.error)) {
+    if (
+      typeof apiResponse.response !== 'string' &&
+      apiResponse.response.data.statuses.find((status) => !!status.error)
+    ) {
       setError(JSON.stringify(apiResponse.response.data.statuses));
     }
   };
@@ -97,12 +101,14 @@ function App() {
   const buyPerp = async () => {
     resetError();
 
-    const coin = 'HYPE-PERP';
-
-    await sdk.exchange.updateLeverage(coin, LeverageModeEnum.ISOLATED, 3);
+    await sdk.exchange.updateLeverage(
+      buyPerpCoin,
+      LeverageModeEnum.ISOLATED,
+      3,
+    );
 
     const apiResponse = await sdk.exchange.placeOrder({
-      coin,
+      coin: buyPerpCoin,
       is_buy: true,
       sz: 4,
       limit_px: 29,
@@ -110,7 +116,10 @@ function App() {
       reduce_only: false,
     });
 
-    if (apiResponse.response.data.statuses.find((status) => !!status.error)) {
+    if (
+      typeof apiResponse.response !== 'string' &&
+      apiResponse.response.data.statuses.find((status) => !!status.error)
+    ) {
       setError(JSON.stringify(apiResponse.response.data.statuses));
     }
   };
@@ -142,84 +151,93 @@ function App() {
     console.log(await sdk.info.getUserPortfolio(publicKey!));
   };
 
-  return (
-      <>
-        <h1>Playground</h1>
-        <h4>Tokens:</h4>
-        {prices && (
-            <>
-              <div>Coins:</div>
-              <div
-                  style={{
-                    height: '300px',
-                    overflow: 'hidden',
-                    overflowY: 'scroll',
-                    border: '1px solid grey',
-                  }}
-              >
-                <table>
-                  <thead>
-                  <tr>
-                    <th>Coin</th>
-                    <th>Price</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  {prices.map((priceObj) => (
-                      <tr key={`row-${priceObj.coin}`}>
-                        <td key={`coin-${priceObj.coin}`}>{priceObj.coin}</td>
-                        <td key={`price-$${priceObj.coin}`}>${priceObj.price}</td>
-                      </tr>
-                  ))}
-                  </tbody>
-                </table>
-              </div>
-            </>
-        )}
-        <h4>Wallet</h4>
-        <div>
-          <div>Your private key:</div>
-          <input onChange={onPrivateKeyChange} value={privateKey}/>
-        </div>
-        {publicKey && <div>Your public key: {publicKey}</div>}
-        <h4>Purchase:</h4>
-        <button onClick={buySpot}>Buy spot (PURR for $0.01)</button>
-        <button onClick={buyPerp}>Buy perp (HYPE for $0.01)</button>
-        <h4>Positions:</h4>
-        {spotBalances &&
-            spotBalances.balances.map((balance, index) => (
-                <div key={index}>
-                  {balance.coin} {balance.hold} {balance.total}
-                </div>
-            ))}
-        {perpBalances &&
-            perpBalances.assetPositions.map((position, index) => (
-                <div key={index}>
-                  {position.position.coin}&nbsp; Size: {position.position.szi}&nbsp;
-                  Entry price: ${position.position.entryPx}&nbsp; Value:{' '}
-                  {position.position.positionValue}&nbsp; Margin: $
-                  {position.position.marginUsed}&nbsp; PnL: $
-                  {position.position.unrealizedPnl}&nbsp;
-                </div>
-            ))}
-        <div>
-          <button onClick={onPositionsRefresh}>Refresh positions</button>
-        </div>
-        <div>
-          <button onClick={onAutoRefresh}>Enable real-time updates</button>
-        </div>
-        <div>
-          <button onClick={onSpotToPerp}>Spot to Perp transfer</button>
-        </div>
-        <div>
-          <button onClick={onUserFees}>Fetch user fees</button>
-        </div>
-        <div>
-          <button onClick={onUserPortfolio}>Fetch user portfolio</button>
-        </div>
+  const getTokenDetails = async () => {
+    console.log(
+      await sdk.info.getTokenDetails('0xc1fb593aeffbeb02f85e0308e9956a90'),
+    );
+  };
 
-        <div style={{color: 'red'}}>{error && error}</div>
-      </>
+  return (
+    <>
+      <h1>Playground</h1>
+      <h4>Tokens:</h4>
+      {prices && (
+        <>
+          <div>Coins:</div>
+          <div
+            style={{
+              height: '300px',
+              overflow: 'hidden',
+              overflowY: 'scroll',
+              border: '1px solid grey',
+            }}
+          >
+            <table>
+              <thead>
+                <tr>
+                  <th>Coin</th>
+                  <th>Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                {prices.map((priceObj) => (
+                  <tr key={`row-${priceObj.coin}`}>
+                    <td key={`coin-${priceObj.coin}`}>{priceObj.coin}</td>
+                    <td key={`price-$${priceObj.coin}`}>${priceObj.price}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
+      <h4>Wallet</h4>
+      <div>
+        <div>Your private key:</div>
+        <input onChange={onPrivateKeyChange} value={privateKey} />
+      </div>
+      {publicKey && <div>Your public key: {publicKey}</div>}
+      <h4>Purchase:</h4>
+      <button onClick={buySpot}>Buy spot ({buySpotCoin})</button>
+      <button onClick={buyPerp}>Buy perp ({buyPerpCoin})</button>
+      <h4>Positions:</h4>
+      {spotBalances &&
+        spotBalances.balances.map((balance, index) => (
+          <div key={index}>
+            {balance.coin} {balance.hold} {balance.total}
+          </div>
+        ))}
+      {perpBalances &&
+        perpBalances.assetPositions.map((position, index) => (
+          <div key={index}>
+            {position.position.coin}&nbsp; Size: {position.position.szi}&nbsp;
+            Entry price: ${position.position.entryPx}&nbsp; Value:{' '}
+            {position.position.positionValue}&nbsp; Margin: $
+            {position.position.marginUsed}&nbsp; PnL: $
+            {position.position.unrealizedPnl}&nbsp;
+          </div>
+        ))}
+      <div>
+        <button onClick={onPositionsRefresh}>Refresh positions</button>
+      </div>
+      <div>
+        <button onClick={onAutoRefresh}>Enable real-time updates</button>
+      </div>
+      <div>
+        <button onClick={onSpotToPerp}>Spot to Perp transfer</button>
+      </div>
+      <div>
+        <button onClick={onUserFees}>Fetch user fees</button>
+      </div>
+      <div>
+        <button onClick={onUserPortfolio}>Fetch user portfolio</button>
+      </div>
+      <div>
+        <button onClick={getTokenDetails}>Get token details (PURR)</button>
+      </div>
+
+      <div style={{ color: 'red' }}>{error && error}</div>
+    </>
   );
 }
 

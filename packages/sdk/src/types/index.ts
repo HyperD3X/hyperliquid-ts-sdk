@@ -43,14 +43,24 @@ export interface AllMids {
   [coin: string]: number;
 }
 
-export interface Meta {
-  universe: {
-    name: string;
-    szDecimals: number;
-    maxLeverage: number;
-    onlyIsolated: boolean;
-  }[];
-}
+export type Universe = {
+  name: string;
+  szDecimals: number;
+  maxLeverage: number;
+  onlyIsolated?: boolean;
+};
+
+export type PerpMetaAndContext = Array<Meta | Array<AssetCtx>>;
+export type SpotMetaAndContext = Array<SpotMeta | Array<SpotAssetCtx>>;
+
+export type SpotMeta = {
+  tokens: SpotToken[];
+  universe: SpotMarket[];
+};
+
+export type Meta = {
+  universe: Universe[];
+};
 
 export interface ClearinghouseState {
   assetPositions: {
@@ -297,6 +307,26 @@ export type UserStatistic = {
 
 export type UserPortfolio = Array<Array<string | UserStatistic>>;
 
+export type TokenDetails = {
+  name: string;
+  maxSupply: string;
+  totalSupply: string;
+  circulatingSupply: string;
+  szDecimals: 0;
+  weiDecimals: 5;
+  midPx: string;
+  markPx: string;
+  prevDayPx: string;
+  genesis: {
+    userBalances: Array<Array<string>>;
+  };
+  deployer: string;
+  deployGas: string;
+  deployTime: string;
+  seededUsdc: string;
+  futureEmissions: string;
+};
+
 export type UserFees = {
   activeReferralDiscount: string;
   dailyUserVlm: [
@@ -444,17 +474,12 @@ export interface SpotMarket {
   isCanonical: boolean;
 }
 
-export interface SpotMeta {
-  tokens: SpotToken[];
-  universe: SpotMarket[];
-}
-
-export interface SpotAssetCtx {
+export type SpotAssetCtx = {
   dayNtlVlm: string;
   markPx: string;
   midPx: string;
   prevDayPx: string;
-}
+};
 
 export interface SpotAssetCtxExtended extends SpotAssetCtx {
   circulatingSupply: string;

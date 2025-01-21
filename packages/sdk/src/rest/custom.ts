@@ -15,6 +15,7 @@ import {
   OrderType,
 } from '../types/index';
 import { SymbolConversion } from '../utils/symbolConversion';
+import { LOG_PREFIX } from '../types/constants';
 
 export class CustomOperations {
   private exchange: ExchangeAPI;
@@ -87,16 +88,20 @@ export class CustomOperations {
     if (!px) {
       const allMids = await this.infoApi.getAllMids();
       px = Number(allMids[convertedSymbol]);
+
+      if (!allMids[convertedSymbol]) {
+        throw new Error(`Was not able to convert symbol: ${symbol}`);
+      }
     }
 
     const isSpot = symbol.includes('-SPOT');
 
-    //If not isSpot count how many decimals price has to use the same amount for rounding
-    const decimals = px.toString().split('.')[1]?.length || 0;
-
     px *= isBuy ? 1 + slippage : 1 - slippage;
-    const spotDecimals = px < 1 ? 5 : 8; // TODO: Check the calculation here: https://github.com/ccxt/ccxt/issues/23516 and here: https://github.com/gaardiolor/ccxt/commit/de43976f408007bf2a8555141b13936735645702#diff-bafe810770b7e09d82844d4f5b0efc778f4e2024f8dfb7973faa9cf603d0ca0eR456
-    return Number(px.toFixed(isSpot ? spotDecimals : decimals - 1));
+
+    const precision = isSpot ? 8 : 6;
+    const rounded = parseFloat(px!.toPrecision(5));
+
+    return parseFloat(rounded.toFixed(precision));
   }
 
   async marketOpen(
@@ -114,6 +119,7 @@ export class CustomOperations {
       slippage,
       px,
     );
+
     const orderRequest: OrderRequest = {
       coin: convertedSymbol,
       is_buy: isBuy,
@@ -126,8 +132,6 @@ export class CustomOperations {
     if (cloid) {
       orderRequest.cloid = cloid;
     }
-
-    console.debug('Order Request payload: ', orderRequest);
 
     return this.exchange.placeOrder(orderRequest);
   }

@@ -1,10 +1,9 @@
 import {
-  Meta,
-  MetaAndAssetCtxs,
-  ClearinghouseState,
-  UserFunding,
-  UserNonFundingLedgerUpdates,
-  FundingHistory,
+    Meta,
+    ClearinghouseState,
+    UserFunding,
+    UserNonFundingLedgerUpdates,
+    FundingHistory, PerpMetaAndContext,
 } from '../../types';
 import { HttpApi, validatePublicKey } from '../../utils/helpers';
 import { InfoType } from '../../types/constants';
@@ -32,7 +31,7 @@ export class PerpetualsInfoAPI {
 
   async getMetaAndAssetCtxs(
     rawResponse: boolean = false,
-  ): Promise<MetaAndAssetCtxs> {
+  ): Promise<PerpMetaAndContext> {
     const response = await this.httpApi.makeRequest({
       type: InfoType.PERPS_META_AND_ASSET_CTXS,
     });

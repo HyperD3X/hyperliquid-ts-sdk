@@ -12,6 +12,7 @@ import {
   ReferralStateResponse,
   UserFees,
   UserPortfolio,
+  TokenDetails,
 } from '../../types';
 import { HttpApi, validatePublicKey } from '../../utils/helpers';
 import { SymbolConversion } from '../../utils/symbolConversion';
@@ -54,6 +55,13 @@ export class GeneralInfoAPI {
     return rawResponse
       ? response
       : await this.symbolConversion.convertResponse(response);
+  }
+
+  async getTokenDetails(tokenId: string): Promise<TokenDetails> {
+    return this.httpApi.makeRequest<TokenDetails>({
+      type: InfoType.TOKEN_DETAILS,
+      tokenId: tokenId,
+    });
   }
 
   async getReferralState(

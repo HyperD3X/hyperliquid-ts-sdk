@@ -17,6 +17,7 @@ import {
   ReferralStateResponse,
   UserFees,
   UserPortfolio,
+  TokenDetails,
 } from '../types/index';
 
 import { InfoType, ENDPOINTS } from '../types/constants';
@@ -58,6 +59,10 @@ export class InfoAPI {
 
   async getAllMids(): Promise<AllMids> {
     return this.generalAPI.getAllMids();
+  }
+
+  async getTokenDetails(tokenId: string): Promise<TokenDetails> {
+    return this.generalAPI.getTokenDetails(tokenId);
   }
 
   async getReferralState(
