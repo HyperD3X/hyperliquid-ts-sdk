@@ -37,30 +37,17 @@ export class WebSocketSubscriptions {
     type: string;
     [key: string]: any;
   }): Promise<void> {
-    const convertedSubscription =
-      await this.symbolConversion.convertSymbolsInObject(subscription);
+    let convertedSubscription = subscription;
+    // TODO: get rid of generic symbol conversion and make it explicitly in each unsubscribe method
+    if (subscription.type !== 'candle') {
+      convertedSubscription =
+        await this.symbolConversion.convertSymbolsInObject(subscription);
+    }
+
     this.ws.sendMessage({
       method: 'unsubscribe',
       subscription: convertedSubscription,
     });
-  }
-
-  private handleMessage(
-    message: any,
-    callback: (data: any) => void,
-    channel: string,
-    additionalChecks: (data: any) => boolean = () => true,
-  ) {
-    if (typeof message !== 'object' || message === null) {
-      console.warn('Received invalid message format:', message);
-      return;
-    }
-
-    let data = message.data || message;
-    if (data.channel === channel && additionalChecks(data)) {
-      const convertedData = this.symbolConversion.convertSymbolsInObject(data);
-      callback(convertedData);
-    }
   }
 
   async subscribeToAllMids(callback: (data: AllMids) => void): Promise<void> {
@@ -76,8 +63,8 @@ export class WebSocketSubscriptions {
           const convertedData: AllMids = {};
           for (const [key, value] of Object.entries(message.data.mids)) {
             const convertedKey = await this.symbolConversion.convertSymbol(key);
-            const convertedValue = this.symbolConversion.convertToNumber(value);
-            convertedData[convertedKey] = convertedValue;
+            convertedData[convertedKey] =
+              this.symbolConversion.convertToNumber(value);
           }
           callback(convertedData);
         }
@@ -317,7 +304,16 @@ export class WebSocketSubscriptions {
   }
 
   async unsubscribeFromCandle(coin: string, interval: string): Promise<void> {
-    this.unsubscribe({ type: 'candle', coin: coin, interval: interval });
+    const convertedCoin = await this.symbolConversion.convertSymbol(
+      coin,
+      'reverse',
+    );
+
+    this.unsubscribe({
+      type: 'candle',
+      coin: convertedCoin,
+      interval: interval,
+    });
   }
 
   async unsubscribeFromL2Book(coin: string): Promise<void> {
