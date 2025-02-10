@@ -134,6 +134,7 @@ function App() {
       setPrices(formatToPrices(allMids));
     });
     await sdk.subscriptions.subscribeToWebData2(publicKey!, (data) => {
+      console.log('web2 data', data);
       setPerpBalances(data.clearinghouseState);
       setSpotBalances(data.spotState);
     });
