@@ -10,9 +10,9 @@ export class WebSocketClient extends EventEmitter {
   private pingInterval: NodeJS.Timeout | null = null;
   private reconnectAttempts: number = 0;
   private maxReconnectAttempts: number = 5;
-  private reconnectDelay: number = 5000;
   private initialReconnectDelay: number = 1000;
   private maxReconnectDelay: number = 30000;
+  private forceClose: boolean = false;
 
   constructor(testnet: boolean = false) {
     super();
@@ -22,6 +22,8 @@ export class WebSocketClient extends EventEmitter {
   }
 
   connect(): Promise<void> {
+    this.forceClose = false;
+
     return new Promise((resolve, reject) => {
       this.ws = new WebSocket(this.url);
 
@@ -45,7 +47,10 @@ export class WebSocketClient extends EventEmitter {
       this.ws.onclose = () => {
         console.log(`${LOG_PREFIX} WebSocket disconnected`);
         this.stopPingInterval();
-        this.reconnect();
+
+        if (!this.forceClose) {
+          this.reconnect();
+        }
       };
     });
   }
@@ -90,6 +95,8 @@ export class WebSocketClient extends EventEmitter {
   }
 
   close(): void {
+    this.forceClose = true;
+
     if (this.ws) {
       this.ws.close();
     }

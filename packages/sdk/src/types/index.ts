@@ -559,7 +559,7 @@ export interface Notification {
 export interface WebData2 extends MetaAndAssetCtxs {
   spotAssetCtxs: SpotAssetCtxExtended[];
   clearinghouseState: ClearinghouseState;
-  spotState: SpotClearinghouseState;
+  spotState?: SpotClearinghouseState;
   serverTime: number;
   totalVaultEquity: string;
   user: string;
