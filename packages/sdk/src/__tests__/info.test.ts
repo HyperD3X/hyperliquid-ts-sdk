@@ -8,21 +8,20 @@ let publicKey: string;
 // Add mocks
 describe('Hyperliquid INFO API tests', () => {
   beforeAll(async () => {
-    const privateKey = process.env.PRIVATE_KEY!;
-    const wallet = new Wallet(privateKey);
+    const wallet = Wallet.createRandom();
     publicKey = await wallet.getAddress();
 
     sdk = new Hyperliquid(wallet);
   });
 
-  test('Get All Mids', async () => {
+  it('Get All Mids', async () => {
     const result = await sdk.info.getAllMids();
     const key = Object.keys(result).filter((item) => item === 'BTC-PERP');
 
     expect(result[key[0]]).toEqual(expect.any(Number));
   });
 
-  test('Get candles snapshot', async () => {
+  it('Get candles snapshot', async () => {
     const result = await sdk.info.getCandleSnapshot(
       'BTC-PERP',
       '1h',
@@ -44,7 +43,7 @@ describe('Hyperliquid INFO API tests', () => {
     });
   });
 
-  test('Get user fees', async () => {
+  it('Get user fees', async () => {
     const result = await sdk.info.getUserFees(publicKey);
 
     expect(result.activeReferralDiscount).toEqual(expect.any(String));
@@ -53,7 +52,7 @@ describe('Hyperliquid INFO API tests', () => {
     expect(result.userAddRate).toEqual(expect.any(String));
   });
 
-  test('Get user portfolio', async () => {
+  it('Get user portfolio', async () => {
     const result = await sdk.info.getUserPortfolio(publicKey);
 
     expect(result[0][0]).toEqual('day');
