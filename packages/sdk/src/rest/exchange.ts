@@ -531,9 +531,11 @@ export class ExchangeAPI {
       );
 
       const payload = { action, nonce, signature };
-      return this.httpApi.makeRequest<
+      const result = await this.httpApi.makeRequest<
         ApiResponseWithStatus<CommonSuccessOrErrorResponse>
       >(payload, 1);
+
+      return this.validateErrorResult(result);
     } catch (error) {
       throw error;
     }
