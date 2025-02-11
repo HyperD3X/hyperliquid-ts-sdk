@@ -13,6 +13,7 @@ import {
   UserFees,
   UserPortfolio,
   TokenDetails,
+  BuilderFeeResponse,
 } from '../../types';
 import { HttpApi, validatePublicKey } from '../../utils/helpers';
 import { SymbolConversion } from '../../utils/symbolConversion';
@@ -72,6 +73,19 @@ export class GeneralInfoAPI {
     return this.httpApi.makeRequest<ReferralStateResponse>({
       type: InfoType.REFERRAL,
       user: userPublicKey,
+    });
+  }
+
+  async getMaximumBuilderFee(
+    userPublicKey: string,
+    builderPublicKey: string,
+  ): Promise<BuilderFeeResponse> {
+    validatePublicKey(userPublicKey);
+
+    return this.httpApi.makeRequest<BuilderFeeResponse>({
+      type: InfoType.MAX_BUILDER_FEE,
+      user: userPublicKey,
+      builder: builderPublicKey,
     });
   }
 

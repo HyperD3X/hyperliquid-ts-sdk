@@ -18,6 +18,7 @@ import {
   UserFees,
   UserPortfolio,
   TokenDetails,
+  BuilderFeeResponse,
 } from '../types/index';
 
 import { InfoType, ENDPOINTS } from '../types/constants';
@@ -69,6 +70,16 @@ export class InfoAPI {
     userPublicKey: string,
   ): Promise<ReferralStateResponse> {
     return this.generalAPI.getReferralState(userPublicKey);
+  }
+
+  async getMaximumBuilderFee(
+    userPublicKey: string,
+    builderPublicKey: string,
+  ): Promise<BuilderFeeResponse> {
+    return this.generalAPI.getMaximumBuilderFee(
+      userPublicKey,
+      builderPublicKey,
+    );
   }
 
   async getUserOpenOrders(
