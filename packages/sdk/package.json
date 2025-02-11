@@ -1,6 +1,6 @@
 {
   "name": "@hyper-d3x/hyperliquid-ts-sdk",
-  "version": "2.6.0",
+  "version": "2.9.0",
   "description": "<<< Typescript SDK for the Hyperliquid API >>>",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

@@ -1,6 +1,6 @@
 import { beforeAll, describe } from '@jest/globals';
-import { Hyperliquid } from '../index';
-import { ethers, Wallet } from 'ethers';
+import { Hyperliquid, WebData2 } from '../index';
+import { Wallet } from 'ethers';
 
 let sdk: Hyperliquid;
 let publicKey: string = '';
@@ -60,5 +60,32 @@ describe('Hyperliquid Subscriptions API tests', () => {
         },
       );
     });
+  });
+
+  test('multiple subscribers to web2 data', async () => {
+    jest.useRealTimers();
+
+    let receivedDataThread_1: WebData2[] = [];
+    await sdk.subscriptions.subscribeToWebData2(publicKey, (data) => {
+      receivedDataThread_1.push(data);
+    });
+
+    await new Promise((resolve) => setTimeout(resolve, 6000));
+
+    expect(receivedDataThread_1.length).toEqual(2);
+
+    await sdk.subscriptions.unsubscribeFromWebData2(publicKey);
+
+    receivedDataThread_1 = [];
+
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    await sdk.subscriptions.subscribeToWebData2(publicKey, (data) => {
+      receivedDataThread_1.push(data);
+    });
+
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+
+    expect(receivedDataThread_1.length).toEqual(2);
   });
 });

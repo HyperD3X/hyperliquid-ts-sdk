@@ -55,17 +55,6 @@ function App() {
     updatePositionsInfo();
   }, [publicKey]);
 
-  const startWebsocket = async () => {
-    await sdk.connect();
-    await sdk.subscriptions.subscribeToAllMids((allMids) => {
-      setPrices(formatToPrices(allMids));
-    });
-    await sdk.subscriptions.subscribeToWebData2(publicKey!, (data) => {
-      setPerpBalances(data.clearinghouseState);
-      setSpotBalances(data.spotState);
-    });
-  };
-
   const formatToPrices = (allMids: AllMids): PriceView[] => {
     return Object.keys(allMids)
       .filter((coin) => !coin.startsWith('@'))
@@ -137,6 +126,31 @@ function App() {
 
   const onAutoRefresh = () => {
     startWebsocket();
+  };
+
+  const startWebsocket = async () => {
+    await sdk.connect();
+    await sdk.subscriptions.subscribeToAllMids((allMids) => {
+      setPrices(formatToPrices(allMids));
+    });
+    await sdk.subscriptions.subscribeToWebData2(publicKey!, (data) => {
+      console.log('web2 data', data);
+      setPerpBalances(data.clearinghouseState);
+      setSpotBalances(data.spotState);
+    });
+    await sdk.subscriptions.subscribeToCandle('BTC-PERP', '1h', (data) => {
+      console.log('candle data', data);
+    });
+    await sdk.subscriptions.subscribeToCandle('HYPE-SPOT', '1h', (data) => {
+      console.log('candle data', data);
+    });
+  };
+
+  const onAutoRefreshDisable = async () => {
+    await sdk.subscriptions.unsubscribeFromAllMids();
+    await sdk.subscriptions.unsubscribeFromWebData2(publicKey!);
+    await sdk.subscriptions.unsubscribeFromCandle('BTC-PERP', '1h');
+    await sdk.subscriptions.unsubscribeFromCandle('HYPE-SPOT', '1h');
   };
 
   const onSpotToPerp = async () => {
@@ -222,6 +236,9 @@ function App() {
       </div>
       <div>
         <button onClick={onAutoRefresh}>Enable real-time updates</button>
+        <button onClick={onAutoRefreshDisable}>
+          Disable real-time updates
+        </button>
       </div>
       <div>
         <button onClick={onSpotToPerp}>Spot to Perp transfer</button>
