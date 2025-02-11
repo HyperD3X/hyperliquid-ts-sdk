@@ -5,6 +5,7 @@ import { InfoAPI } from './info';
 import { ExchangeAPI } from './exchange';
 import {
   ApiResponseWithStatus,
+  Builder,
   CommonSuccessOrErrorResponse,
   UserOpenOrders,
 } from '../types';
@@ -111,6 +112,7 @@ export class CustomOperations {
     px?: number,
     slippage: number = this.DEFAULT_SLIPPAGE,
     cloid?: string,
+    builder?: Builder,
   ): Promise<ApiResponseWithStatus<OrderResponse | string>> {
     const convertedSymbol = await this.symbolConversion.convertSymbol(symbol);
     const slippagePrice = await this.getSlippagePrice(
@@ -127,6 +129,7 @@ export class CustomOperations {
       limit_px: slippagePrice,
       order_type: { limit: { tif: 'Ioc' } } as OrderType,
       reduce_only: false,
+      builder,
     };
 
     if (cloid) {
