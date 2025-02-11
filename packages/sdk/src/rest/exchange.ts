@@ -112,15 +112,21 @@ export class ExchangeAPI {
     }
   }
 
+  /*
+   * response examples:
+   * ERROR:
+   *  - {status: 'ok', response: {type: 'order', data: {statuses: [{error: 'Some error'}]}}}
+   *  - {status: 'err', response: 'Some error'}
+   * SUCCESS:
+   *  - {status: 'ok', response: {type: 'default'}}
+   */
   private validateErrorResult(
-    result: ApiResponseWithStatus<OrderResponse | string>,
-  ): ApiResponseWithStatus<OrderResponse | string> {
-    if (result.status === 'ok') {
-      return result;
-    } else {
-      console.log(`${LOG_PREFIX} Validation error: `, result.response);
-    }
-
+    result: ApiResponseWithStatus<
+      OrderResponse | string | CommonSuccessOrErrorResponse
+    >,
+  ): ApiResponseWithStatus<
+    OrderResponse | string | CommonSuccessOrErrorResponse
+  > {
     if (typeof result.response !== 'string') {
       const status = result?.response?.data?.statuses?.find(
         (status) => !!status.error,
@@ -130,7 +136,7 @@ export class ExchangeAPI {
       }
     }
 
-    if (typeof result.response === 'string') {
+    if (typeof result.response === 'string' && result.status !== 'ok') {
       throw new Error(result.response);
     }
 
