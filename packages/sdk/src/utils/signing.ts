@@ -269,7 +269,9 @@ export function orderWireToAction(
     type: 'order',
     orders: orders,
     grouping: grouping,
-    ...(builder !== undefined ? { builder: builder } : {}),
+    ...(builder !== undefined
+      ? { builder: { b: builder.address, f: builder.address } }
+      : {}),
   };
 }
 
