@@ -270,7 +270,7 @@ export function orderWireToAction(
     orders: orders,
     grouping: grouping,
     ...(builder !== undefined
-      ? { builder: { b: builder.address, f: builder.fee } }
+      ? { builder: { b: builder.address.toLowerCase(), f: builder.fee } }
       : {}),
   };
 }

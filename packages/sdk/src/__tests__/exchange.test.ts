@@ -42,4 +42,19 @@ describe('Hyperliquid EXCHANGE API tests', () => {
 
     expect(fee).toEqual(1000);
   });
+
+  it.skip('Send market request with builder', async () => {
+    const builder = '';
+    const result = await sdk.custom.marketOpen(
+      'BTC-PERP',
+      true,
+      190730,
+      undefined,
+      undefined,
+      undefined,
+      { address: builder, fee: 10 },
+    );
+
+    expect(result).toEqual({ response: { type: 'default' }, status: 'ok' });
+  });
 });
