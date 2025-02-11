@@ -18,6 +18,7 @@ export enum InfoType {
   META = 'meta',
   OPEN_ORDERS = 'openOrders',
   REFERRAL = 'referral',
+  MAX_BUILDER_FEE = 'maxBuilderFee',
   FRONTEND_OPEN_ORDERS = 'frontendOpenOrders',
   USER_FILLS = 'userFills',
   USER_FILLS_BY_TIME = 'userFillsByTime',
@@ -52,6 +53,7 @@ export enum ExchangeType {
   WITHDRAW = 'withdraw3',
   VAULT_TRANSFER = 'vaultTransfer',
   SET_REFERRER = 'setReferrer',
+  APPROVE_BUILDER_FEE = 'approveBuilderFee',
   USD_CLASS_TRANSFER = 'usdClassTransfer',
 }
 

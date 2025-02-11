@@ -9,6 +9,7 @@ import {
   signUserSignedAction,
   signUsdTransferAction,
   signWithdrawFromBridgeAction,
+  signApproveBuilderFee,
 } from '../utils/signing';
 import * as CONSTANTS from '../types/constants';
 
@@ -526,6 +527,39 @@ export class ExchangeAPI {
         action,
         null,
         nonce,
+        this.isMainnet,
+      );
+
+      const payload = { action, nonce, signature };
+      return this.httpApi.makeRequest<
+        ApiResponseWithStatus<CommonSuccessOrErrorResponse>
+      >(payload, 1);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /*
+    builderPublicKey - EVM address for builder. Example:  "0x.."
+    fee - fee in the percent format, max 1 percent. Example: "1%"
+  */
+  async approveBuilderFee(
+    builderPublicKey: string,
+    fee: string,
+  ): Promise<ApiResponseWithStatus<CommonSuccessOrErrorResponse | string>> {
+    try {
+      const nonce = Date.now();
+
+      const action = {
+        type: ExchangeType.APPROVE_BUILDER_FEE,
+        builder: builderPublicKey,
+        maxFeeRate: fee,
+        nonce,
+      };
+
+      const signature = await signApproveBuilderFee(
+        this.wallet,
+        action,
         this.isMainnet,
       );
 

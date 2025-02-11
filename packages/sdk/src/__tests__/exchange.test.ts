@@ -3,11 +3,13 @@ import { Hyperliquid } from '../index';
 import { Wallet } from 'ethers';
 
 let sdk: Hyperliquid;
+let wallet: Wallet;
 
 // Add mocks
 describe('Hyperliquid EXCHANGE API tests', () => {
   beforeAll(async () => {
-    sdk = new Hyperliquid(Wallet.createRandom());
+    wallet = new Wallet(process.env.PRIVATE_KEY!);
+    sdk = new Hyperliquid(wallet);
   });
 
   it.skip('Place Order', async () => {
@@ -25,5 +27,19 @@ describe('Hyperliquid EXCHANGE API tests', () => {
     return expect(t).rejects.toThrow(
       'Order must have minimum value of $10. asset=152',
     );
+  });
+
+  it.skip('Approve builder fee', async () => {
+    const builder = '';
+    const result = await sdk.exchange.approveBuilderFee(builder, '1%');
+
+    expect(result).toEqual({ response: { type: 'default' }, status: 'ok' });
+
+    const fee = await sdk.info.getMaximumBuilderFee(
+      await wallet.getAddress(),
+      builder,
+    );
+
+    expect(fee).toEqual(1000);
   });
 });

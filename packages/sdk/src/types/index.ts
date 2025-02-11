@@ -263,6 +263,8 @@ export interface ReferralStateResponse {
   unclaimedRewards: string;
 }
 
+export type BuilderFeeResponse = number;
+
 export interface SpotClearinghouseState {
   balances: SpotBalance[];
 }
