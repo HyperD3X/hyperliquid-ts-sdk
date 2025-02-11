@@ -5,14 +5,12 @@ import { Wallet } from 'ethers';
 let sdk: Hyperliquid;
 
 // Add mocks
-describe.skip('Hyperliquid EXCHANGE API tests', () => {
+describe('Hyperliquid EXCHANGE API tests', () => {
   beforeAll(async () => {
-    const privateKey = process.env.PRIVATE_KEY!;
-
-    sdk = new Hyperliquid(new Wallet(privateKey));
+    sdk = new Hyperliquid(Wallet.createRandom());
   });
 
-  test('Place Order', async () => {
+  it.skip('Place Order', async () => {
     const t = async () => {
       await sdk.exchange.placeOrder({
         coin: 'PURR-PERP',
