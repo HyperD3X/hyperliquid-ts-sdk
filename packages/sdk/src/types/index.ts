@@ -269,7 +269,7 @@ export interface SpotClearinghouseState {
   balances: SpotBalance[];
 }
 
-export interface FrontendOpenOrders {
+export type FrontendOpenOrders = {
   coin: string;
   isPositionTpsl: boolean;
   isTrigger: boolean;
@@ -283,8 +283,7 @@ export interface FrontendOpenOrders {
   timestamp: number;
   triggerCondition: string;
   triggerPx: string;
-}
-[];
+}[];
 
 export interface UserFills {
   closedPnl: string;
@@ -569,6 +568,7 @@ export interface WebData2 extends MetaAndAssetCtxs {
   agentValidUntil: number;
   cumLedger: string;
   isVault: boolean;
+  openOrders: FrontendOpenOrders;
 }
 
 export interface WsUserFill {
