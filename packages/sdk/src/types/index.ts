@@ -104,21 +104,6 @@ export interface ClearinghouseState {
   withdrawable: string;
 }
 
-export interface UserFills {
-  closedPnl: string;
-  coin: string;
-  crossed: boolean;
-  dir: string;
-  hash: string;
-  oid: number;
-  px: string;
-  side: string;
-  startPosition: string;
-  sz: string;
-  time: number;
-}
-[];
-
 // TODO: Check if this response can be changed to CommonSuccessOrErrorResponse as extension
 export interface OrderResponse {
   type: string;
@@ -269,7 +254,9 @@ export interface SpotClearinghouseState {
   balances: SpotBalance[];
 }
 
-export type FrontendOpenOrders = {
+export type FrontendOpenOrders = FrontendOpenOrder[];
+
+export type FrontendOpenOrder = {
   coin: string;
   isPositionTpsl: boolean;
   isTrigger: boolean;
@@ -283,9 +270,11 @@ export type FrontendOpenOrders = {
   timestamp: number;
   triggerCondition: string;
   triggerPx: string;
-}[];
+};
 
-export interface UserFills {
+export type UserFills = UserFill[];
+
+export type UserFill = {
   closedPnl: string;
   coin: string;
   crossed: boolean;
@@ -297,8 +286,7 @@ export interface UserFills {
   startPosition: string;
   sz: string;
   time: number;
-}
-[];
+};
 
 export type UserStatistic = {
   accountValueHistory: Array<Array<number | string>>;
