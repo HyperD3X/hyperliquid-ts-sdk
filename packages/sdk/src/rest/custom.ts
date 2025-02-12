@@ -38,7 +38,7 @@ export class CustomOperations {
 
   async cancelAllOrders(
     symbol?: string,
-  ): Promise<ApiResponseWithStatus<CommonSuccessOrErrorResponse>> {
+  ): Promise<ApiResponseWithStatus<CommonSuccessOrErrorResponse | string>> {
     try {
       const address = await this.wallet.getAddress();
       const openOrders: UserOpenOrders =
