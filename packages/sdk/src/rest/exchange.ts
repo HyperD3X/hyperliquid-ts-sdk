@@ -28,7 +28,6 @@ import {
   ENDPOINTS,
   ARBITRUM_CHAIN_ID_HEX,
   HYPERLIQUID_CHAIN_NAME,
-  LOG_PREFIX,
 } from '../types/constants';
 import { SymbolConversion } from '../utils/symbolConversion';
 
@@ -106,7 +105,9 @@ export class ExchangeAPI {
         ApiResponseWithStatus<OrderResponse | string>
       >(payload, 1);
 
-      return this.validateErrorResult(result);
+      return this.validateErrorResult<
+        ApiResponseWithStatus<OrderResponse | string>
+      >(result);
     } catch (error) {
       throw error;
     }
@@ -119,14 +120,13 @@ export class ExchangeAPI {
    *  - {status: 'err', response: 'Some error'}
    * SUCCESS:
    *  - {status: 'ok', response: {type: 'default'}}
+   *  - {"status":"ok","response":{"type":"cancel","data":{"statuses":["success"]}}}
    */
-  private validateErrorResult(
-    result: ApiResponseWithStatus<
+  private validateErrorResult<
+    T extends ApiResponseWithStatus<
       OrderResponse | string | CommonSuccessOrErrorResponse
     >,
-  ): ApiResponseWithStatus<
-    OrderResponse | string | CommonSuccessOrErrorResponse
-  > {
+  >(result: T): T {
     if (typeof result.response !== 'string') {
       const status = result?.response?.data?.statuses?.find(
         (status) => !!status.error,
@@ -146,7 +146,7 @@ export class ExchangeAPI {
   //Cancel using order id (oid)
   async cancelOrder(
     cancelRequests: CancelOrderRequest | CancelOrderRequest[],
-  ): Promise<ApiResponseWithStatus<CommonSuccessOrErrorResponse>> {
+  ): Promise<ApiResponseWithStatus<CommonSuccessOrErrorResponse | string>> {
     try {
       const cancels = Array.isArray(cancelRequests)
         ? cancelRequests
@@ -175,9 +175,13 @@ export class ExchangeAPI {
       );
 
       const payload = { action, nonce, signature };
-      return this.httpApi.makeRequest<
+      const result = await this.httpApi.makeRequest<
         ApiResponseWithStatus<CommonSuccessOrErrorResponse>
       >(payload, 1);
+
+      return this.validateErrorResult<
+        ApiResponseWithStatus<CommonSuccessOrErrorResponse | string>
+      >(result);
     } catch (error) {
       throw error;
     }
@@ -274,7 +278,7 @@ export class ExchangeAPI {
     symbol: string,
     leverageMode: LeverageModeEnum,
     leverage: number,
-  ): Promise<ApiResponseWithStatus<CommonSuccessOrErrorResponse>> {
+  ): Promise<ApiResponseWithStatus<CommonSuccessOrErrorResponse | string>> {
     try {
       const assetIndex = await this.getAssetIndex(symbol);
       const action = {
@@ -293,9 +297,13 @@ export class ExchangeAPI {
       );
 
       const payload = { action, nonce, signature };
-      return this.httpApi.makeRequest<
+      const result = await this.httpApi.makeRequest<
         ApiResponseWithStatus<CommonSuccessOrErrorResponse>
       >(payload, 1);
+
+      return this.validateErrorResult<
+        ApiResponseWithStatus<CommonSuccessOrErrorResponse | string>
+      >(result);
     } catch (error) {
       throw error;
     }
@@ -426,7 +434,9 @@ export class ExchangeAPI {
         ApiResponseWithStatus<CommonSuccessOrErrorResponse | string>
       >(payload, 1);
 
-      return this.validateErrorResult(result);
+      return this.validateErrorResult<
+        ApiResponseWithStatus<CommonSuccessOrErrorResponse | string>
+      >(result);
     } catch (error) {
       throw error;
     }
@@ -466,7 +476,9 @@ export class ExchangeAPI {
         ApiResponseWithStatus<CommonSuccessOrErrorResponse | string>
       >(payload, 1);
 
-      return this.validateErrorResult(result);
+      return this.validateErrorResult<
+        ApiResponseWithStatus<CommonSuccessOrErrorResponse | string>
+      >(result);
     } catch (error) {
       throw error;
     }
@@ -538,10 +550,12 @@ export class ExchangeAPI {
 
       const payload = { action, nonce, signature };
       const result = await this.httpApi.makeRequest<
-        ApiResponseWithStatus<CommonSuccessOrErrorResponse>
+        ApiResponseWithStatus<CommonSuccessOrErrorResponse | string>
       >(payload, 1);
 
-      return this.validateErrorResult(result);
+      return this.validateErrorResult<
+        ApiResponseWithStatus<CommonSuccessOrErrorResponse | string>
+      >(result);
     } catch (error) {
       throw error;
     }
