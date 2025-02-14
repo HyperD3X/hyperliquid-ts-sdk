@@ -613,6 +613,6 @@ export type WsUserActiveAssetData = {
   user: string;
   coin: string;
   leverage: Leverage;
-  maxTradeSzs: [number, number];
-  availableToTrade: [number, number];
+  maxTradeSzs: [string, string];
+  availableToTrade: [string, string];
 };
