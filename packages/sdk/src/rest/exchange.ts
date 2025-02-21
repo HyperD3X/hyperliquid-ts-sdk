@@ -206,7 +206,13 @@ export class ExchangeAPI {
       );
 
       const payload = { action, nonce, signature };
-      return this.httpApi.makeRequest(payload, 1);
+      const result = await this.httpApi.makeRequest<
+        ApiResponseWithStatus<CommonSuccessOrErrorResponse | string>
+      >(payload, 1);
+
+      return this.validateErrorResult<
+        ApiResponseWithStatus<CommonSuccessOrErrorResponse | string>
+      >(result);
     } catch (error) {
       throw error;
     }
@@ -233,7 +239,13 @@ export class ExchangeAPI {
       );
 
       const payload = { action, nonce, signature };
-      return this.httpApi.makeRequest(payload, 1);
+      const result = await this.httpApi.makeRequest<
+        ApiResponseWithStatus<CommonSuccessOrErrorResponse | string>
+      >(payload, 1);
+
+      return this.validateErrorResult<
+        ApiResponseWithStatus<CommonSuccessOrErrorResponse | string>
+      >(result);
     } catch (error) {
       throw error;
     }
@@ -269,7 +281,13 @@ export class ExchangeAPI {
       );
 
       const payload = { action, nonce, signature };
-      return this.httpApi.makeRequest(payload, 1);
+      const result = await this.httpApi.makeRequest<
+        ApiResponseWithStatus<CommonSuccessOrErrorResponse | string>
+      >(payload, 1);
+
+      return this.validateErrorResult<
+        ApiResponseWithStatus<CommonSuccessOrErrorResponse | string>
+      >(result);
     } catch (error) {
       throw error;
     }
@@ -334,7 +352,13 @@ export class ExchangeAPI {
       );
 
       const payload = { action, nonce, signature };
-      return this.httpApi.makeRequest(payload, 1);
+      const result = await this.httpApi.makeRequest<
+        ApiResponseWithStatus<CommonSuccessOrErrorResponse | string>
+      >(payload, 1);
+
+      return this.validateErrorResult<
+        ApiResponseWithStatus<CommonSuccessOrErrorResponse | string>
+      >(result);
     } catch (error) {
       throw error;
     }
@@ -364,7 +388,13 @@ export class ExchangeAPI {
       );
 
       const payload = { action, nonce: action.time, signature };
-      return this.httpApi.makeRequest(payload, 1);
+      const result = await this.httpApi.makeRequest<
+        ApiResponseWithStatus<CommonSuccessOrErrorResponse | string>
+      >(payload, 1);
+
+      return this.validateErrorResult<
+        ApiResponseWithStatus<CommonSuccessOrErrorResponse | string>
+      >(result);
     } catch (error) {
       throw error;
     }
@@ -401,7 +431,14 @@ export class ExchangeAPI {
       );
 
       const payload = { action, nonce: action.time, signature };
-      return this.httpApi.makeRequest(payload, 1);
+
+      const result = await this.httpApi.makeRequest<
+        ApiResponseWithStatus<CommonSuccessOrErrorResponse | string>
+      >(payload, 1);
+
+      return this.validateErrorResult<
+        ApiResponseWithStatus<CommonSuccessOrErrorResponse | string>
+      >(result);
     } catch (error) {
       throw error;
     }
@@ -499,7 +536,13 @@ export class ExchangeAPI {
       );
 
       const payload = { action, nonce, signature };
-      return this.httpApi.makeRequest(payload, 1);
+      const result = await this.httpApi.makeRequest<
+        ApiResponseWithStatus<CommonSuccessOrErrorResponse | string>
+      >(payload, 1);
+
+      return this.validateErrorResult<
+        ApiResponseWithStatus<CommonSuccessOrErrorResponse | string>
+      >(result);
     } catch (error) {
       throw error;
     }
@@ -528,7 +571,13 @@ export class ExchangeAPI {
       );
 
       const payload = { action, nonce, signature };
-      return this.httpApi.makeRequest(payload, 1);
+      const result = await this.httpApi.makeRequest<
+        ApiResponseWithStatus<CommonSuccessOrErrorResponse | string>
+      >(payload, 1);
+
+      return this.validateErrorResult<
+        ApiResponseWithStatus<CommonSuccessOrErrorResponse | string>
+      >(result);
     } catch (error) {
       throw error;
     }
@@ -587,9 +636,13 @@ export class ExchangeAPI {
       );
 
       const payload = { action, nonce, signature };
-      return this.httpApi.makeRequest<
+      const result = await this.httpApi.makeRequest<
         ApiResponseWithStatus<CommonSuccessOrErrorResponse>
       >(payload, 1);
+
+      return this.validateErrorResult<
+        ApiResponseWithStatus<CommonSuccessOrErrorResponse>
+      >(result);
     } catch (error) {
       throw error;
     }
