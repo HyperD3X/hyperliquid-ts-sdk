@@ -121,6 +121,7 @@ export class ExchangeAPI {
    * SUCCESS:
    *  - {status: 'ok', response: {type: 'default'}}
    *  - {"status":"ok","response":{"type":"cancel","data":{"statuses":["success"]}}}
+   *  - {"status":"ok","response":{"type":"order","data":{"statuses":[{"filled":{"totalSz":"0.61","avgPx":"26.069","oid":72579120867}}]}}}
    */
   private validateErrorResult<
     T extends ApiResponseWithStatus<

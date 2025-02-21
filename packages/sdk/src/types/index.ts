@@ -1,4 +1,4 @@
-export type Tif = 'Alo' | 'Ioc' | 'Gtc';
+export type Tif = 'Alo' | 'Ioc' | 'Gtc' | 'FrontendMarket';
 export type TriggerType = 'tp' | 'sl';
 export type LimitOrder = { tif: Tif };
 export type TriggerOrder = {
@@ -270,6 +270,7 @@ export type FrontendOpenOrder = {
   timestamp: number;
   triggerCondition: string;
   triggerPx: string;
+  children: Omit<FrontendOpenOrder, 'children'>;
 };
 
 export type UserFills = UserFill[];
