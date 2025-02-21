@@ -270,7 +270,7 @@ export type FrontendOpenOrder = {
   timestamp: number;
   triggerCondition: string;
   triggerPx: string;
-  children: Omit<FrontendOpenOrder, 'children'>;
+  children: Omit<FrontendOpenOrder, 'children'>[];
 };
 
 export type UserFills = UserFill[];
