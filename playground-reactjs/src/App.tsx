@@ -14,6 +14,7 @@ type PriceView = { coin: string; price: string };
 
 const buySpotCoin = 'HYPE-SPOT';
 const buyPerpCoin = 'HYPE-PERP';
+const buyPerpCoinTpSl = 'BTC-PERP';
 
 function App() {
   const mounted = useRef(false);
@@ -58,7 +59,7 @@ function App() {
   const formatToPrices = (allMids: AllMids): PriceView[] => {
     return Object.keys(allMids)
       .filter((coin) => !coin.startsWith('@'))
-      .map((coin) => ({ coin, price: allMids[coin] }));
+      .map((coin) => ({ coin, price: `${allMids[coin]}` }));
   };
 
   const load = async () => {
@@ -96,20 +97,166 @@ function App() {
       3,
     );
 
-    const apiResponse = await sdk.exchange.placeOrder({
-      coin: buyPerpCoin,
-      is_buy: true,
-      sz: 4,
-      limit_px: 29,
-      order_type: { limit: { tif: 'Ioc' } },
-      reduce_only: false,
-    });
+    const apiResponse = await sdk.custom.marketOpen(buyPerpCoin, true, 4);
 
     if (
       typeof apiResponse.response !== 'string' &&
       apiResponse.response.data.statuses.find((status) => !!status.error)
     ) {
       setError(JSON.stringify(apiResponse.response.data.statuses));
+    }
+  };
+
+  const limitOrderPerpWithTpSl = async () => {
+    resetError();
+
+    try {
+      await sdk.exchange.updateLeverage(
+        buyPerpCoinTpSl,
+        LeverageModeEnum.ISOLATED,
+        1,
+      );
+
+      await sdk.exchange.placeOrder({
+        grouping: 'normalTpsl',
+        orders: [
+          {
+            coin: 'ETH-PERP',
+            is_buy: true,
+            sz: 0.0039,
+            limit_px: 2500,
+            order_type: { limit: { tif: 'Gtc' } },
+            reduce_only: false,
+          },
+          {
+            coin: 'ETH-PERP',
+            is_buy: false,
+            sz: 0.0039,
+            limit_px: 2500,
+            order_type: {
+              trigger: {
+                isMarket: true,
+                tpsl: 'sl',
+                triggerPx: '2000',
+              },
+            },
+            reduce_only: true,
+          },
+          {
+            coin: 'ETH-PERP',
+            is_buy: false,
+            sz: 0.0039,
+            limit_px: 2500,
+            order_type: {
+              trigger: {
+                isMarket: true,
+                tpsl: 'tp',
+                triggerPx: '3000',
+              },
+            },
+            reduce_only: true,
+          },
+        ],
+      });
+    } catch (e: unknown) {
+      let error = e as Error;
+      setError(error.message as string);
+    }
+  };
+
+  const marketOrderPerpWithTpSl = async () => {
+    resetError();
+    const coin = 'ETH-PERP';
+
+    try {
+      await sdk.exchange.updateLeverage(
+        buyPerpCoinTpSl,
+        LeverageModeEnum.ISOLATED,
+        1,
+      );
+
+      const price = await sdk.custom.getSlippagePrice(coin, true);
+
+      await sdk.exchange.placeOrder({
+        grouping: 'normalTpsl',
+        orders: [
+          {
+            coin,
+            is_buy: true,
+            sz: 0.0039,
+            limit_px: price,
+            order_type: { limit: { tif: 'FrontendMarket' } },
+            reduce_only: false,
+          },
+          {
+            coin,
+            is_buy: false,
+            sz: 0.0039,
+            limit_px: price,
+            order_type: {
+              trigger: {
+                isMarket: true,
+                tpsl: 'sl',
+                triggerPx: '2000',
+              },
+            },
+            reduce_only: true,
+          },
+          {
+            coin,
+            is_buy: false,
+            sz: 0.0039,
+            limit_px: price,
+            order_type: {
+              trigger: {
+                isMarket: true,
+                tpsl: 'tp',
+                triggerPx: '3000',
+              },
+            },
+            reduce_only: true,
+          },
+        ],
+      });
+    } catch (e: unknown) {
+      let error = e as Error;
+      setError(error.message as string);
+    }
+  };
+
+  const addTpSlToPosition = async () => {
+    resetError();
+    const coin = 'ETH-PERP';
+
+    try {
+      await sdk.exchange.updateLeverage(
+        buyPerpCoinTpSl,
+        LeverageModeEnum.ISOLATED,
+        1,
+      );
+
+      await sdk.exchange.placeOrder({
+        grouping: 'positionTpsl',
+        orders: [
+          {
+            coin,
+            is_buy: false,
+            sz: 0.0039,
+            limit_px: 2500,
+            order_type: {
+              trigger: {
+                isMarket: true,
+                tpsl: 'sl',
+                triggerPx: '2000',
+              },
+            },
+            reduce_only: true,
+          },
+        ],
+      });
+    } catch (e: unknown) {
+      let error = e as Error;
+      setError(error.message as string);
     }
   };
 
@@ -214,6 +361,9 @@ function App() {
       <h4>Purchase:</h4>
       <button onClick={buySpot}>Buy spot ({buySpotCoin})</button>
       <button onClick={buyPerp}>Buy perp ({buyPerpCoin})</button>
+      <button onClick={limitOrderPerpWithTpSl}>Limit Perp with TP/SL</button>
+      <button onClick={marketOrderPerpWithTpSl}>Market Perp with TP/SL</button>
+      <button onClick={addTpSlToPosition}>Add TP/SL to position</button>
       <h4>Positions:</h4>
       {spotBalances &&
         spotBalances.balances.map((balance, index) => (

@@ -79,10 +79,10 @@ export class CustomOperations {
 
   private DEFAULT_SLIPPAGE = 0.05;
 
-  private async getSlippagePrice(
+  public async getSlippagePrice(
     symbol: string,
     isBuy: boolean,
-    slippage: number,
+    slippage: number = this.DEFAULT_SLIPPAGE,
     px?: number,
   ): Promise<number> {
     const convertedSymbol = await this.symbolConversion.convertSymbol(symbol);
